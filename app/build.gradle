@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.5.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,19 +33,58 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // Networking
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Video Player
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.6'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.11.6'
+
+    // Parsing
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation 'org.jsoup:jsoup:1.13.1'
+
+    // Extensions
+    implementation 'com.github.uvnode:typhoon-android-extensions-lib:a1143e9a0e'
+
+    // Ads & Analytics
+    implementation 'com.adcolony:sdk:4.2.0'
+    implementation 'com.flurry.android:analytics:12.1.0'
+    implementation "com.google.android.gms:play-services-ads-identifier:17.0.0"
+
+    // UI
+    implementation 'com.github.marlonlom:timeago:4.0.3'
+    implementation 'com.nononsenseapps:filepicker:4.2.1'
+    implementation 'com.webianks.library:easy-feedback:1.0.2'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    // AndroidX
     implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.android.material:material:1.1.0'
+
+    // Testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // Other
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'net.swiftzer.semver:semver:1.1.1'
 
 }
