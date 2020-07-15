@@ -5,4 +5,10 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="gridview_spacing">1dp</dimen>
+    <dimen name="gridview_item_corner_radius">2dp</dimen>
+
+    <dimen name="source_selection_horizontal_padding">8dp</dimen>
+    <dimen name="source_selection_vertical_padding">12dp</dimen>
 </resources>

@@ -8,16 +8,16 @@ import com.airstream.typhoon.data.SourceRepository
 
 object Injector {
 
+    fun getNetworkHelper(ctx: Context): NetworkHelper {
+        return NetworkHelper.getInstance(ctx.applicationContext)
+    }
+
     fun getExtensionManager(ctx: Context): ExtensionManager {
         return ExtensionManager.getInstance(ctx.applicationContext)
     }
 
-    fun getSourceManager(ctx: Context): SourceManager {
-        return SourceManager.getInstance(ctx.applicationContext)
-    }
-
     fun getSourceRepository(ctx: Context): SourceRepository {
-        return SourceRepository.getInstance(SourceManager.getInstance(ctx.applicationContext))
+        return SourceRepository.getInstance(SourceManager(ctx.applicationContext))
     }
 
 }

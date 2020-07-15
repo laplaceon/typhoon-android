@@ -21,7 +21,7 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
     fun getSourceNames() = getSources().map { it.source.name }
 
     companion object {
-        private var instance: SourceRepository? = null;
+        @Volatile private var instance: SourceRepository? = null;
 
         fun getInstance(sourceManager: SourceManager) =
             instance ?: synchronized(this) {

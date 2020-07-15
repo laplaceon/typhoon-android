@@ -65,7 +65,7 @@ class ExtensionManager private constructor(private val ctx: Context) {
     private fun isExtensionPackage(pkgInfo: PackageInfo) = pkgInfo.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE }
 
     private fun getAvailableExtensionsFromRepo() {
-        val sourceManager = Injector.getSourceManager(ctx)
+        val sourceManager = Injector.getNetworkHelper(ctx)
 
         val request = Request.Builder().url(MAIN_REPO + "repo.json").get().build()
 
@@ -86,7 +86,7 @@ class ExtensionManager private constructor(private val ctx: Context) {
                         val extension = Extension()
                         extension.name = extensionNode.get("name").asText()
                         val version = extensionNode.get("version").asText()
-                        val versionCode = extensionNode.get("Version_code").asInt()
+                        val versionCode = extensionNode.get("version_code").asInt()
                         val packageName = extensionNode.get("package").asText()
                         val url = extensionNode.get("url").asText()
 

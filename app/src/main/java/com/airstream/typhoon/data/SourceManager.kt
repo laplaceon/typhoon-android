@@ -9,6 +9,8 @@ import com.uvnode.typhoon.extensions.api.ApiResponse
 import com.uvnode.typhoon.extensions.executor.JSEClient
 import com.uvnode.typhoon.extensions.model.Series
 import com.uvnode.typhoon.extensions.model.Source
+import com.uvnode.typhoon.extensions.source.Configurable
+import com.uvnode.typhoon.extensions.source.HttpSource
 import com.uvnode.typhoon.extensions.source.MetaSource
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -16,17 +18,9 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class SourceManager private constructor(ctx: Context) {
+class SourceManager(val ctx: Context) {
 
-    var okClient: OkHttpClient = OkHttpClient.Builder()
-        .cache(Cache(ctx.cacheDir, 10 * 10 * 1024))
-        .cookieJar(SyncCookieHandler())
-        .readTimeout(20, TimeUnit.SECONDS)
-        .build()
-        private set
-
-    var jseClient: JSEClient = JSEClient(ctx)
-        private set
+    private val networkHelper = Injector.getNetworkHelper(ctx)
 
     private val extensionManager = Injector.getExtensionManager(ctx)
 
@@ -36,7 +30,16 @@ class SourceManager private constructor(ctx: Context) {
         var sources = mutableListOf<MetaSource>()
 
         for(extension in extensions) {
-            extension.extension?.sources?.let { sources.addAll(it) }
+            extension.extension?.sources?.forEach {
+                if (it is Configurable) {
+                    it.setSharedPreferences(ctx.getSharedPreferences("", Context.MODE_PRIVATE))
+                }
+                if (it is HttpSource) {
+                    it.okClient = networkHelper.okClient
+                    it.setJSEClient(networkHelper.jseClient)
+                }
+                sources.add(it)
+            }
         }
 
         return sources
@@ -57,14 +60,5 @@ class SourceManager private constructor(ctx: Context) {
 
             source.getSeriesList(callback)
         }
-
-    companion object {
-        private var instance: SourceManager? = null;
-
-        fun getInstance(ctx: Context) =
-            instance ?: synchronized(this) {
-                instance ?: SourceManager(ctx).also { instance = it }
-            }
-    }
 
 }

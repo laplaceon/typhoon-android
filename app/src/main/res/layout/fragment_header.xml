@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <ImageView
+        android:id="@+id/image_sources"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+        <ImageButton
+            android:id="@+id/button_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_info"
+            android:layout_marginRight="@dimen/source_selection_horizontal_padding"
+            android:layout_marginLeft="@dimen/source_selection_horizontal_padding"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/spinner_sources_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image_sources"
+        android:background="@drawable/black_gradient"
+        android:paddingBottom="@dimen/source_selection_vertical_padding"
+        android:paddingLeft="@dimen/source_selection_horizontal_padding"
+        android:paddingRight="@dimen/source_selection_horizontal_padding"
+        android:paddingTop="@dimen/source_selection_vertical_padding">
+        <Spinner
+            android:id="@+id/spinner_sources"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>
