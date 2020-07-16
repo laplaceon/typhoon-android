@@ -1,0 +1,42 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="gridview_spacing">1dp</dimen>
+    <dimen name="gridview_item_corner_radius">2dp</dimen>
+
+<!--    <dimen name="episode_image_preview_width">96dp</dimen>-->
+<!--    <dimen name="episode_image_preview_height">54dp</dimen>-->
+<!--    <dimen name="episode_detail_margin">4dp</dimen>-->
+<!--    <dimen name="episode_padding">16dp</dimen>-->
+
+<!--    <dimen name="historyitem_padding">8dp</dimen>-->
+<!--    <dimen name="historyitem_source_vertical_padding">2dp</dimen>-->
+<!--    <dimen name="historyitem_source_horizontal_padding">4dp</dimen>-->
+<!--    <dimen name="historyitem_series_episode_margin">4dp</dimen>-->
+
+<!--    <dimen name="card_title_text_size">15sp</dimen>-->
+<!--    <dimen name="card_title_text_padding">6dp</dimen>-->
+    <dimen name="series_elevation">2dp</dimen>
+    <dimen name="series_padding">2dp</dimen>
+    <dimen name="series_image_preview">240dp</dimen>
+
+<!--    <dimen name="librarylist_name_text_size">18sp</dimen>-->
+<!--    <dimen name="librarylist_name_text_margin">4dp</dimen>-->
+<!--    <dimen name="librarylist_item_horizontal_padding">4dp</dimen>-->
+<!--    <dimen name="librarylist_item_vertical_padding">6dp</dimen>-->
+
+<!--    <dimen name="player_control_margin">8dp</dimen>-->
+<!--    <dimen name="player_source_controls_margin">18dp</dimen>-->
+<!--    <dimen name="player_source_controls_padding">14dp</dimen>-->
+<!--    <dimen name="player_source_controls_layout_padding">20dp</dimen>-->
+
+<!--    <dimen name="series_details_text_margin">16dp</dimen>-->
+<!--    <dimen name="series_title_padding_horizontal">16dp</dimen>-->
+<!--    <dimen name="series_title_padding_vertical">8dp</dimen>-->
+
+<!--    <dimen name="source_info_dialog_description_padding">8dp</dimen>-->
+<!--    <dimen name="source_info_dialog_link_padding">8dp</dimen>-->
+
+    <dimen name="source_selection_horizontal_padding">8dp</dimen>
+    <dimen name="source_selection_vertical_padding">12dp</dimen>
+</resources>

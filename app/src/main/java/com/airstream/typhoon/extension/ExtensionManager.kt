@@ -1,9 +1,8 @@
-package com.airstream.typhoon.data
+package com.airstream.typhoon.extension
 
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import com.airstream.typhoon.extension.ExtensionHolder
 import com.airstream.typhoon.utils.Injector
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.uvnode.typhoon.extensions.Extension
@@ -60,16 +59,18 @@ class ExtensionManager private constructor(private val ctx: Context) {
     }
 
     private fun isValidExtension(extensionHolder: ExtensionHolder) =
-        SemVer.parse(extensionHolder.extension!!.apiVersion).compareTo(MINIMUM_SUPPORTED_EXTENSION_API) >= 0
+        SemVer.parse(extensionHolder.extension!!.apiVersion).compareTo(
+            MINIMUM_SUPPORTED_EXTENSION_API
+        ) >= 0
 
     private fun isExtensionPackage(pkgInfo: PackageInfo) = pkgInfo.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE }
 
     private fun getAvailableExtensionsFromRepo() {
-        val sourceManager = Injector.getNetworkHelper(ctx)
+        val networkHelper = Injector.getNetworkHelper(ctx)
 
         val request = Request.Builder().url(MAIN_REPO + "repo.json").get().build()
 
-        sourceManager.okClient.newCall(request).enqueue(object: Callback {
+        networkHelper.okClient.newCall(request).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 TODO("Not yet implemented")
             }
@@ -134,8 +135,11 @@ class ExtensionManager private constructor(private val ctx: Context) {
         private var instance: ExtensionManager? = null;
 
         fun getInstance(ctx: Context) =
-            instance ?: synchronized(this) {
-                instance ?: ExtensionManager(ctx).also { instance = it }
+            instance
+                ?: synchronized(this) {
+                instance
+                    ?: ExtensionManager(ctx)
+                        .also { instance = it }
             }
     }
 

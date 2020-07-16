@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/series_padding"
+    android:id="@+id/series_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:clipToPadding="false"
+    android:focusable="true">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        style="@style/AppTheme.SeriesItem"
+        android:id="@+id/image_card"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/series_image_preview"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:riv_corner_radius="@dimen/gridview_item_corner_radius"
+        android:elevation="@dimen/series_elevation"
+        android:foreground="?android:attr/selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/title_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_gradient"
+        android:ellipsize="end"
+        android:padding="@dimen/series_text_padding"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/series_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/image_card"
+        app:layout_constraintEnd_toEndOf="@id/image_card"
+        app:layout_constraintStart_toStartOf="@id/image_card"
+        android:translationZ="@dimen/series_elevation"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

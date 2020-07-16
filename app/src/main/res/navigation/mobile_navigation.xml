@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_extensions"
-        android:name="com.airstream.typhoon.ui.home.HomeFragment"
+        android:name="com.airstream.typhoon.ui.extensions.ExtensionsFragment"
         android:label="@string/menu_extensions"
         tools:layout="@layout/fragment_home" />
 
@@ -21,5 +21,11 @@
         android:id="@+id/nav_library"
         android:name="com.airstream.typhoon.ui.library.LibraryFragment"
         android:label="@string/menu_library"
+        tools:layout="@layout/fragment_library" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.airstream.typhoon.ui.history.HistoryFragment"
+        android:label="@string/menu_history"
         tools:layout="@layout/fragment_library" />
 </navigation>

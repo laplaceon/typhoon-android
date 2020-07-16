@@ -1,8 +1,8 @@
 package com.airstream.typhoon.utils
 
 import android.content.Context
-import com.airstream.typhoon.data.ExtensionManager
 import com.airstream.typhoon.data.SeriesRepository
+import com.airstream.typhoon.extension.ExtensionManager
 import com.airstream.typhoon.data.SourceManager
 import com.airstream.typhoon.data.SourceRepository
 
@@ -18,6 +18,10 @@ object Injector {
 
     fun getSourceRepository(ctx: Context): SourceRepository {
         return SourceRepository.getInstance(SourceManager(ctx.applicationContext))
+    }
+
+    fun getSeriesRepository(ctx: Context): SeriesRepository {
+        return SeriesRepository.getInstance(SourceManager(ctx.applicationContext))
     }
 
 }
