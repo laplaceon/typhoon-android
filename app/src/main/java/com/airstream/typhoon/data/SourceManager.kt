@@ -68,6 +68,22 @@ class SourceManager(val ctx: Context) {
             source?.getSeriesList(callback)
         }
 
+    suspend fun getSeriesList(source: MetaSource?, ranking: Ranking): List<Series>? =
+        suspendCoroutine {
+            val callback = object: ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    val series: List<Series> = response?.get() as List<Series>
+                    it.resume(series)
+                }
+            }
+
+            (source as Rankable).getSeriesList(callback, ranking)
+        }
+
     suspend fun getRankings(source: MetaSource?): List<Ranking>? =
         suspendCoroutine {
             val callback = object: ApiCallbacks {

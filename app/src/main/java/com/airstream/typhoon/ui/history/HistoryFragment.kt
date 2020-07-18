@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +29,12 @@ class HistoryFragment : Fragment() {
         historyViewModel =
                 ViewModelProvider(this).get(HistoryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
+        val navSpinner: Spinner = requireActivity().findViewById(R.id.nav_spinner)
+
+        toolbar?.setDisplayShowTitleEnabled(true)
+        navSpinner?.visibility = View.GONE
 
         return root
     }

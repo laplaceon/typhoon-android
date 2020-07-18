@@ -1,24 +1,30 @@
 package com.airstream.typhoon.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.uvnode.typhoon.extensions.source.MetaSource
 
 class SourceRepository private constructor(private val sourceManager: SourceManager) {
 
-    private val sources = MutableLiveData<List<MetaSource>?>().apply {
-        value = null
+    private val _sources: MutableLiveData<List<MetaSource>> by lazy {
+        MutableLiveData<List<MetaSource>>()
     }
+
+    val sources: LiveData<List<MetaSource>> = _sources
+
     val sourcesMap: MutableMap<String, Int> = mutableMapOf()
 
-    val currentSource = MutableLiveData<String?>().apply {
-        value = null
+    private val _currentSource: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
     }
 
-    fun getSourcesList(): MutableLiveData<List<MetaSource>?> {
-        if (sources.value == null) {
+    val currentSource: LiveData<String> = _currentSource
+
+    fun getSourcesList(): LiveData<List<MetaSource>> {
+        if (_sources.value == null) {
             sourceManager.getSources().also { it ->
-                sources.value = it
+                _sources.value = it
                 sourcesMap.clear()
                 it.withIndex().forEach {
                     sourcesMap[it.value.source.id] = it.index
@@ -32,9 +38,11 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
         return sources
     }
 
-    fun getSourceById(id: String) = sourcesMap[id]?.let { sources.value?.get(it) }
+    fun getSourceById(id: String?) = sourcesMap[id]?.let { sources.value?.get(it) }
 
-    fun getSourceNames() = sources.value?.map { it.source.name }
+    fun setCurrentSource(id: String?) {
+        _currentSource.value = id
+    }
 
     companion object {
         private const val TAG = "SourceRepository"

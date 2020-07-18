@@ -10,29 +10,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceManager
 import com.airstream.typhoon.utils.Injector
+import com.uvnode.typhoon.extensions.source.MetaSource
 
 class HeaderViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sourceRepository = Injector.getSourceRepository(application)
     private val preferences = PreferenceManager.getDefaultSharedPreferences(application)
-//    private val sourceNames: List<String>
-    private var currentSource = getCurrentSourceIndex()
 
-    fun getSources() = sourceRepository.getSourcesList()
+    val sources = sourceRepository.getSourcesList()
 
-    fun getSourceNames() = sourceRepository.getSourceNames()
+    fun getSourceNames(sources: List<MetaSource>) = sources.map { it.source.name }
 
     fun getCurrentSourceIndex() = sourceRepository.sourcesMap[preferences.getString(SOURCE_KEY, "")] ?: 0
 
     fun setCurrentSource(pos: Int) {
-        if (currentSource != pos) {
+        val id = sourceRepository.sources.value?.get(pos)!!.source.id
+        if (sourceRepository.currentSource.value != id) {
             val preferencesEditor = preferences.edit()
-            val id = sourceRepository.getSourcesList().value?.get(pos)!!.source.id
-            Log.d(TAG, "setCurrentSource: " + id)
             preferencesEditor.putString(SOURCE_KEY, id)
             preferencesEditor.apply()
-            currentSource = pos
-            sourceRepository.currentSource.value = id
+            Log.d(TAG, "setCurrentSource: $id")
+            sourceRepository.setCurrentSource(id)
         }
     }
 

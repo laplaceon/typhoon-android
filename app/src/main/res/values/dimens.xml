@@ -12,8 +12,8 @@
     <dimen name="series_elevation">2dp</dimen>
     <dimen name="series_padding">2dp</dimen>
     <dimen name="series_image_preview">216dp</dimen>
-    <dimen name="series_text_padding">1dp</dimen>
-    <dimen name="series_text_size">1dp</dimen>
+    <dimen name="series_text_padding">6dp</dimen>
+    <dimen name="series_text_size">15sp</dimen>
 
     <dimen name="source_selection_horizontal_padding">8dp</dimen>
     <dimen name="source_selection_vertical_padding">12dp</dimen>
