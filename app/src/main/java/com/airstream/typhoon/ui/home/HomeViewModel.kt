@@ -49,19 +49,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         if (_seriesList.value == null) {
             val ranking = rankings!![rankingPos]
             _seriesList.value = seriesRepository.getSeriesListWithRanking(sourceRepository.getSourceById(currentSource.value!!), ranking)
-            Log.d(TAG, "getSeriesList: Called")
+            Log.d(TAG, "getSeriesList: Updated from network")
         }
-
-        Log.d(TAG, "getSeriesList: Cache Called")
     }
 
     suspend fun getSeriesList() {
         if (_seriesList.value == null) {
             _seriesList.value = seriesRepository.getSeriesList(sourceRepository.getSourceById(currentSource.value))
-            Log.d(TAG, "getSeriesList: Called")
+            Log.d(TAG, "getSeriesList: Updated from data source")
         }
-
-        Log.d(TAG, "getSeriesList: Cache Called")
     }
 
     fun switchRanking(p2: Int) {

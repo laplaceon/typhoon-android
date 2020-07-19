@@ -10,8 +10,6 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.airstream.typhoon.R
 import kotlinx.android.synthetic.main.app_bar_main.*
 

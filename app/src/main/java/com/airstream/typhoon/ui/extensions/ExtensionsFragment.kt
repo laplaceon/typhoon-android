@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,16 +19,20 @@ import com.airstream.typhoon.R
 
 class ExtensionsFragment : Fragment() {
 
-    private lateinit var extensionsViewModel: ExtensionsViewModel
+    private val extensionsViewModel: ExtensionsViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        extensionsViewModel =
-                ViewModelProvider(this).get(ExtensionsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_extensions, container, false)
+
+        val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
+        val navSpinner: Spinner = requireActivity().findViewById(R.id.nav_spinner)
+
+        toolbar?.setDisplayShowTitleEnabled(true)
+        navSpinner?.visibility = View.GONE
 
         return root
     }

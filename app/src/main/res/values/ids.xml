@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inside `res/values/ids.xml` -->
+<!-- You also need to define R.id.item_click_support using ids.xml -->
+<resources>
+    <item type="id" name="drag_handle" />
+    <item name="item_click_support" type="id" />
+</resources>

@@ -8,22 +8,20 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.airstream.typhoon.R
 
 class LibraryFragment : Fragment() {
 
-    private lateinit var libraryViewModel: LibraryViewModel
+    private val libraryViewModel: LibraryViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        libraryViewModel =
-                ViewModelProvider(this).get(LibraryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_library, container, false)
 
         val toolbar = (requireActivity() as AppCompatActivity).supportActionBar

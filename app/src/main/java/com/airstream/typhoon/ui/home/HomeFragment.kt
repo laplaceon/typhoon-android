@@ -1,5 +1,6 @@
 package com.airstream.typhoon.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,8 +17,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
+import com.airstream.typhoon.ui.series.SeriesActivity
 import com.airstream.typhoon.adapter.SeriesAdapter
-import com.uvnode.typhoon.extensions.model.Ranking
+import com.airstream.typhoon.utils.ItemClickSupport
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.*
 
@@ -53,6 +55,18 @@ class HomeFragment : Fragment() {
         gridView.layoutManager = GridLayoutManager(requireActivity(), resources.getInteger(R.integer.gridview_series_columns))
         gridView.setHasFixedSize(true)
         gridView.adapter = seriesAdapter
+
+        ItemClickSupport.addTo(gridView).setOnItemClickListener(object : ItemClickSupport.OnItemClickListener {
+            override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
+                val series = seriesAdapter.getItem(position)
+
+                val intent = Intent(requireActivity(), SeriesActivity::class.java).apply {
+                    putExtra("series", series)
+                    putExtra("source", homeViewModel.currentSource.value)
+                }
+                requireActivity().startActivity(intent)
+            }
+        })
 
         homeViewModel.currentSource.observe(viewLifecycleOwner, Observer {
             var currentRanking = savedInstanceState?.getInt("currentRanking", 0) ?: 0

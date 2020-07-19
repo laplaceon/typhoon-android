@@ -1,6 +1,7 @@
 package com.airstream.typhoon.data
 
 import android.content.Context
+import android.util.Log
 import com.airstream.typhoon.utils.Injector
 import com.airstream.typhoon.utils.SyncCookieHandler
 import com.uvnode.typhoon.extensions.api.ApiCallbacks
@@ -23,13 +24,11 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class SourceManager(val ctx: Context) {
+class SourceManager(private val ctx: Context) {
 
     private val networkHelper = Injector.getNetworkHelper(ctx)
 
     private val extensionManager = Injector.getExtensionManager(ctx)
-
-    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     fun getSources(): List<MetaSource> {
         val extensions = extensionManager.getInstalledExtensions()
@@ -99,6 +98,9 @@ class SourceManager(val ctx: Context) {
 
             (source as Rankable).getRankings(callback)
         }
-
+    
+    companion object {
+        private const val TAG = "SourceManager"
+    }
 
 }

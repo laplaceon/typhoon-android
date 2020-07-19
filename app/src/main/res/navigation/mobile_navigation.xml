@@ -9,7 +9,7 @@
         android:id="@+id/nav_extensions"
         android:name="com.airstream.typhoon.ui.extensions.ExtensionsFragment"
         android:label="@string/menu_extensions"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_extensions" />
 
     <fragment
         android:id="@+id/nav_home"
