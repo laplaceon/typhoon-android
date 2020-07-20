@@ -47,6 +47,26 @@ class SourceManager(private val ctx: Context) {
         return sources
     }
 
+    suspend fun getSeries(source: MetaSource?, series: Series): Series? =
+        suspendCoroutine {
+            val callback = object: ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    if (response?.result == ApiResponse.SOME) {
+                        it.resume(response.get() as Series)
+                    } else {
+                        it.resume(series)
+                    }
+
+                }
+            }
+
+            source?.getSeries(callback, series)
+        }
+
     suspend fun getSeriesList(source: MetaSource?): List<Series>? =
         suspendCoroutine {
             val callback = object: ApiCallbacks {
@@ -95,7 +115,7 @@ class SourceManager(private val ctx: Context) {
             (source as Rankable).getRankings(callback)
         }
 
-    suspend fun getEpisodesList(source: MetaSource?, series: Series?, listing: Listing): List<Episode>? =
+    suspend fun getEpisodesList(source: MetaSource?, series: Series?): List<Episode>? =
         suspendCoroutine {
             val callback = object: ApiCallbacks {
                 override fun onFailure(error: ApiError?) {
@@ -106,6 +126,27 @@ class SourceManager(private val ctx: Context) {
                     val episodes: List<Episode> = response?.get() as List<Episode>
 
                     it.resume(episodes)
+                }
+            }
+
+            source?.getEpisodesList(callback, series)
+        }
+
+    suspend fun getEpisodesList(source: MetaSource?, series: Series?, listing: Listing): List<Episode>? =
+        suspendCoroutine {
+            val callback = object: ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    if (response?.result == ApiResponse.SOME) {
+                        val episodes: List<Episode> = response.get() as List<Episode>
+
+                        it.resume(episodes)
+                    } else {
+                        it.resume(listing.episodes)
+                    }
                 }
             }
 

@@ -47,7 +47,7 @@ class EpisodesControlsFragment : Fragment() {
         listingIndicatorText.visibility = View.VISIBLE
         listingIndicatorText.text = resources.getString(R.string.listings_none)
 
-        seriesViewModel.episodes.observe(viewLifecycleOwner, Observer {
+        seriesViewModel.listings.observe(viewLifecycleOwner, Observer {
             if (it.size > 1) {
                 listingsSpinner.visibility = View.VISIBLE
                 listingIndicatorText.visibility = View.GONE
@@ -60,7 +60,7 @@ class EpisodesControlsFragment : Fragment() {
                     it.name
                 })
 
-                listingsSpinner.setSelection(seriesViewModel.currentListing.value!!)
+                listingsSpinner.setSelection(seriesViewModel.currentListing)
             } else if (it.size == 1) {
                 listingsSpinner.visibility = View.GONE
                 listingIndicatorText.visibility = View.VISIBLE

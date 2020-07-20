@@ -14,12 +14,15 @@
     <dimen name="episode_detail_margin">4dp</dimen>
     <dimen name="episode_padding">16dp</dimen>
 
+    <dimen name="listings_name_text_margin">4dp</dimen>
+
     <dimen name="series_elevation">2dp</dimen>
     <dimen name="series_padding">2dp</dimen>
     <dimen name="series_image_preview">216dp</dimen>
     <dimen name="series_text_padding">6dp</dimen>
     <dimen name="series_text_size">15sp</dimen>
 
+    <dimen name="series_details_text_margin">16dp</dimen>
     <dimen name="series_title_padding_horizontal">16dp</dimen>
     <dimen name="series_title_padding_vertical">8dp</dimen>
 

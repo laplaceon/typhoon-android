@@ -14,9 +14,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/listings_name_text_margin"
+        android:layout_marginStart="@dimen/listings_name_text_margin"
         android:layout_weight="1" />
-<!--        android:layout_marginLeft="@dimen/librarylist_name_text_margin"-->
-<!--        android:layout_marginStart="@dimen/librarylist_name_text_margin" />-->
 
     <ImageButton
         android:id="@+id/togglebutton_episodes_ordering"

@@ -48,10 +48,10 @@ class EpisodesFragment : Fragment() {
             }
         }
 
-        seriesViewModel.currentListing.observe(viewLifecycleOwner, Observer {
+        seriesViewModel.episodes.observe(viewLifecycleOwner, Observer {
             Log.d(TAG, "onCreateView: $it")
             episodesAdapter.clear()
-            episodesAdapter.addAll(seriesViewModel.episodes.value?.get(it)?.episodes, seriesViewModel.sortOrder.value!!)
+            episodesAdapter.addAll(it, seriesViewModel.sortOrder.value!!)
         })
 
         seriesViewModel.sortOrder.observe(viewLifecycleOwner, Observer {
