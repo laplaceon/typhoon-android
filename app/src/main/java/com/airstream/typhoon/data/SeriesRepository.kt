@@ -13,6 +13,8 @@ class SeriesRepository private constructor(private val sourceManager: SourceMana
 
     suspend fun getSeriesListWithRanking(sourceById: MetaSource?, ranking: Ranking): List<Series>? = sourceManager.getSeriesList(sourceById, ranking)
 
+    suspend fun getListings(sourceById: MetaSource?, series: Series?) = sourceManager.getListings(sourceById, series)
+
     companion object {
         @Volatile private var instance: SeriesRepository? = null;
 

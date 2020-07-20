@@ -8,18 +8,14 @@ import com.uvnode.typhoon.extensions.api.ApiCallbacks
 import com.uvnode.typhoon.extensions.api.ApiError
 import com.uvnode.typhoon.extensions.api.ApiResponse
 import com.uvnode.typhoon.extensions.executor.JSEClient
-import com.uvnode.typhoon.extensions.model.Ranking
-import com.uvnode.typhoon.extensions.model.Series
-import com.uvnode.typhoon.extensions.model.Source
-import com.uvnode.typhoon.extensions.source.Configurable
-import com.uvnode.typhoon.extensions.source.HttpSource
-import com.uvnode.typhoon.extensions.source.MetaSource
-import com.uvnode.typhoon.extensions.source.Rankable
+import com.uvnode.typhoon.extensions.model.*
+import com.uvnode.typhoon.extensions.source.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -91,14 +87,65 @@ class SourceManager(private val ctx: Context) {
                 }
 
                 override fun onResponse(response: ApiResponse?) {
-                    val series: List<Ranking> = response?.get() as List<Ranking>
-                    it.resume(series)
+                    val rankings: List<Ranking> = response?.get() as List<Ranking>
+                    it.resume(rankings)
                 }
             }
 
             (source as Rankable).getRankings(callback)
         }
-    
+
+    suspend fun getEpisodesList(source: MetaSource?, series: Series?, listing: Listing): List<Episode>? =
+        suspendCoroutine {
+            val callback = object: ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    val episodes: List<Episode> = response?.get() as List<Episode>
+
+                    it.resume(episodes)
+                }
+            }
+
+            source?.getEpisodesList(callback, series)
+        }
+
+    suspend fun getListings(source: MetaSource?, series: Series?): List<Listing>? =
+        suspendCoroutine {
+            val hasListings = source is HasListings
+
+            val callback = object : ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    if (hasListings) {
+                        val listings: List<Listing> = response?.get() as List<Listing>
+
+                        it.resume(listings)
+                    } else {
+                        val episodes: List<Episode> = response?.get() as List<Episode>
+
+                        val listings: List<Listing> = listOf(Listing())
+                        listings[0].episodes = episodes as ArrayList<Episode>?
+                        listings[0].id = ""
+                        listings[0].name = ""
+
+                        it.resume(listings)
+                    }
+                }
+            }
+
+            if (hasListings) {
+                (source as HasListings).getListings(callback, series)
+            } else {
+                source?.getEpisodesList(callback, series)
+            }
+        }
+
     companion object {
         private const val TAG = "SourceManager"
     }

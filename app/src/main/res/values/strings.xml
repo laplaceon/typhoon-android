@@ -13,4 +13,11 @@
     <string name="menu_history">History</string>
 
     <string name="action_search">Search</string>
+
+    <string name="tab_episodes">Episodes</string>
+    <string name="tab_details">Details</string>
+    <string name="tab_recommendations">Recommendations</string>
+
+    <string name="listings_default">Default listing</string>
+    <string name="listings_none">No listings</string>
 </resources>

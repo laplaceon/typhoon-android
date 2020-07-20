@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/episode_item_root"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:padding="@dimen/episode_padding"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/image_episode"
+        android:layout_width="@dimen/episode_image_preview_width"
+        android:layout_height="@dimen/episode_image_preview_height"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="@dimen/episode_detail_margin"
+        android:layout_marginEnd="@dimen/episode_detail_margin" />
+
+    <TextView
+        android:id="@+id/num_episode"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/title_episode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:layout_marginLeft="@dimen/episode_detail_margin"
+        android:layout_marginStart="@dimen/episode_detail_margin" />
+
+</LinearLayout>

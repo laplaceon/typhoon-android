@@ -8,15 +8,13 @@ import java.util.concurrent.TimeUnit
 
 class NetworkHelper private constructor(ctx: Context) {
 
-    var okClient: OkHttpClient = OkHttpClient.Builder()
+    val okClient: OkHttpClient = OkHttpClient.Builder()
         .cache(Cache(ctx.cacheDir, 10 * 10 * 1024))
         .cookieJar(SyncCookieHandler())
         .readTimeout(20, TimeUnit.SECONDS)
         .build()
-        private set
 
-    var jseClient: JSEClient = JSEClient(ctx)
-        private set
+    val jseClient: JSEClient = JSEClient(ctx)
 
     companion object {
         @Volatile private var instance: NetworkHelper? = null;

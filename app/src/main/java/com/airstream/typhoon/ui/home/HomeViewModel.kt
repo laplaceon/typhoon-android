@@ -46,7 +46,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun getRankingsNames() = getRankings().map { it.name }
 
     private suspend fun getSeriesList(rankingPos: Int) {
-        if (_seriesList.value == null) {
+        if (seriesList.value == null) {
             val ranking = rankings!![rankingPos]
             _seriesList.value = seriesRepository.getSeriesListWithRanking(sourceRepository.getSourceById(currentSource.value!!), ranking)
             Log.d(TAG, "getSeriesList: Updated from network")
@@ -54,7 +54,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun getSeriesList() {
-        if (_seriesList.value == null) {
+        if (seriesList.value == null) {
             _seriesList.value = seriesRepository.getSeriesList(sourceRepository.getSourceById(currentSource.value))
             Log.d(TAG, "getSeriesList: Updated from data source")
         }
