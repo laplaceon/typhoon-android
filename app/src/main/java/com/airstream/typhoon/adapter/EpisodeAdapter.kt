@@ -14,7 +14,6 @@ import com.uvnode.typhoon.extensions.model.Episode
 class EpisodeAdapter() : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
 
     private val episodes: MutableList<Episode> = mutableListOf()
-    private var listOrdering = true
 
     fun clear() {
         val size = itemCount
@@ -22,20 +21,17 @@ class EpisodeAdapter() : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
         notifyItemRangeRemoved(0, size)
     }
 
-    fun setListOrdering(ascending: Boolean) {
-        listOrdering = ascending
-        reorderList()
+    fun reorderList() {
+        episodes.reverse()
+        notifyDataSetChanged()
     }
 
-    private fun reorderList() {
-        if(!listOrdering) {
-            episodes.reverse()
-        }
-    }
-
-    fun addAll(episodes: List<Episode>?) {
+    fun addAll(episodes: List<Episode>?, ascending: Boolean) {
         if (episodes != null) {
             this.episodes.addAll(episodes)
+            if (!ascending) {
+                this.episodes.reverse()
+            }
             notifyDataSetChanged()
         }
     }

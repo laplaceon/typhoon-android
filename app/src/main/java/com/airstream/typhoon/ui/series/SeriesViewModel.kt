@@ -28,12 +28,16 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
         MutableLiveData<List<Listing>>()
     }
 
+    private val _currentListing: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>(0)
+    }
+
     private val _sortOrder: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>(preferences.getBoolean(LIST_ORDERING_KEY, true))
     }
 
     val episodes: LiveData<List<Listing>> = _episodes
-    var currentListing = MutableLiveData<Int>()
+    val currentListing: LiveData<Int> = _currentListing
     val sortOrder: LiveData<Boolean> = _sortOrder
 
     fun getListings() {
@@ -41,10 +45,14 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
             val source = sourceRepository.getSourceById(sourceId)
             viewModelScope.launch {
                 _episodes.value = seriesRepository.getListings(source, series.value)
-
-                Log.d(TAG, "getListings: ${episodes.value}")
             }
         }
+    }
+
+    fun switchListing(listing: Int) {
+//        if (currentListing.value != listing) {
+            _currentListing.value = listing
+//        }
     }
 
     fun toggleOrder() {

@@ -49,13 +49,14 @@ class EpisodesFragment : Fragment() {
         }
 
         seriesViewModel.currentListing.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "onCreateView: $it")
             episodesAdapter.clear()
-//            episodesAdapter.setListOrdering(seriesViewModel.sortOrder.value!!)
-            episodesAdapter.addAll(seriesViewModel.episodes.value?.get(it)?.episodes)
+            episodesAdapter.addAll(seriesViewModel.episodes.value?.get(it)?.episodes, seriesViewModel.sortOrder.value!!)
         })
 
         seriesViewModel.sortOrder.observe(viewLifecycleOwner, Observer {
-            episodesAdapter.setListOrdering(it)
+            Log.d(TAG, "onCreateView: $it")
+            episodesAdapter.reorderList()
         })
 
         return root

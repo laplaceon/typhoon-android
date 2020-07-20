@@ -31,7 +31,7 @@ class EpisodesControlsFragment : Fragment() {
 
         listingsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                TODO("Not yet implemented")
+                seriesViewModel.switchListing(p2)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -39,13 +39,13 @@ class EpisodesControlsFragment : Fragment() {
             }
         }
 
-        listingsSpinner.visibility = View.GONE
-        listingIndicatorText.visibility = View.VISIBLE
-        listingIndicatorText.text = resources.getString(R.string.listings_none)
-
         sortToggleButton.setOnClickListener {
             seriesViewModel.toggleOrder()
         }
+
+        listingsSpinner.visibility = View.GONE
+        listingIndicatorText.visibility = View.VISIBLE
+        listingIndicatorText.text = resources.getString(R.string.listings_none)
 
         seriesViewModel.episodes.observe(viewLifecycleOwner, Observer {
             if (it.size > 1) {
@@ -55,10 +55,18 @@ class EpisodesControlsFragment : Fragment() {
                 val listingsAdapter = ArrayAdapter<CharSequence>(requireActivity(), android.R.layout.simple_spinner_item)
                 listingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 listingsSpinner.adapter = listingsAdapter
-            } else {
+
+                listingsAdapter.addAll(it.map {
+                    it.name
+                })
+
+                listingsSpinner.setSelection(seriesViewModel.currentListing.value!!)
+            } else if (it.size == 1) {
                 listingsSpinner.visibility = View.GONE
                 listingIndicatorText.visibility = View.VISIBLE
-                listingIndicatorText.text = resources.getString(R.string.listings_none)
+                listingIndicatorText.text = resources.getString(R.string.listings_default)
+
+                seriesViewModel.switchListing(0)
             }
         })
 
