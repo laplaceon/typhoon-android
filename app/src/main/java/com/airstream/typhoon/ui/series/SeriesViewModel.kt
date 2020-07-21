@@ -51,8 +51,11 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
             val source = sourceRepository.getSourceById(sourceId)
             if (source is HasListings) {
                 listings.value?.get(currentListing)?.let {
+                    Log.d(TAG, "getEpisodesList: $it")
                     viewModelScope.launch {
-                        _episodes.value = seriesRepository.getEpisodesListWithListing(source, series.value!!, it) as ArrayList<Episode>?
+                        val e = seriesRepository.getEpisodesListWithListing(source, series.value!!, it)
+                        Log.d(TAG, "getEpisodesList: $e")
+                        _episodes.value = e as ArrayList<Episode>?
                     }
                 }
             } else {
@@ -68,6 +71,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
             val source = sourceRepository.getSourceById(sourceId)
             viewModelScope.launch {
                 _listings.value = seriesRepository.getListings(source, series.value)
+                Log.d(TAG, "getListings: ${series.value}")
             }
         }
     }

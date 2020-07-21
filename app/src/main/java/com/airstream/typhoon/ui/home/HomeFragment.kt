@@ -117,7 +117,7 @@ class HomeFragment : Fragment() {
         } else {
             navSpinner.visibility = View.GONE
             toolbar?.setDisplayShowTitleEnabled(true)
-            CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.Main).launch {
                 homeViewModel.getSeriesList()
             }
         }

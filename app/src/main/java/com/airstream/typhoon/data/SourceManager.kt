@@ -33,6 +33,9 @@ class SourceManager(private val ctx: Context) {
 
         for(extension in extensions) {
             extension.extension?.sources?.forEach {
+                if (it is UsesContext) {
+                    it.setContext(ctx)
+                }
                 if (it is Configurable) {
                     it.setSharedPreferences(ctx.getSharedPreferences("", Context.MODE_PRIVATE))
                 }
@@ -150,7 +153,7 @@ class SourceManager(private val ctx: Context) {
                 }
             }
 
-            source?.getEpisodesList(callback, series)
+            (source as HasListings).getEpisodesList(callback, series, listing)
         }
 
     suspend fun getListings(source: MetaSource?, series: Series?): List<Listing>? =

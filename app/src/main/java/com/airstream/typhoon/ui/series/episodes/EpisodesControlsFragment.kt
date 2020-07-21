@@ -31,6 +31,7 @@ class EpisodesControlsFragment : Fragment() {
 
         listingsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                Log.d(TAG, "onItemSelected: $p2")
                 seriesViewModel.switchListing(p2)
             }
 
