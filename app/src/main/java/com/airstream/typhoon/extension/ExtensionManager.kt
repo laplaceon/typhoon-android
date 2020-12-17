@@ -22,11 +22,11 @@ import java.io.IOException
 
 class ExtensionManager private constructor(private val ctx: Context) {
 
-    private val _installedExtensions: MutableLiveData<MutableList<ExtensionHolder>> by lazy {
-        MutableLiveData<MutableList<ExtensionHolder>>(mutableListOf())
+    private val _installedExtensions: MutableLiveData<List<ExtensionHolder>> by lazy {
+        MutableLiveData<List<ExtensionHolder>>()
     }
 
-    private val installedExtensions: LiveData<MutableList<ExtensionHolder>> = _installedExtensions
+    private val installedExtensions: LiveData<List<ExtensionHolder>> = _installedExtensions
     private val availableExtensions: MutableList<ExtensionHolder> = mutableListOf()
     private val packageMap: MutableMap<String, Int> = mutableMapOf()
     private val downloads: MutableMap<String, File> = mutableMapOf()
@@ -44,6 +44,8 @@ class ExtensionManager private constructor(private val ctx: Context) {
         val packageManager = ctx.packageManager
 
         val installedPackages = packageManager.getInstalledPackages(PACKAGE_FLAGS)
+
+        val installedExtensions = mutableListOf<ExtensionHolder>()
 
         installedPackages.filter {
             isExtensionPackage(it)
@@ -67,11 +69,13 @@ class ExtensionManager private constructor(private val ctx: Context) {
                 extensionHolder.icon = icon
 
                 if (isValidExtension(extensionHolder)) {
-                    packageMap[extension.packageName] = installedExtensions.value!!.size
-                    _installedExtensions.value!!.add(extensionHolder)
+                    packageMap[extension.packageName] = installedExtensions.size
+                    installedExtensions.add(extensionHolder)
                 }
             }
         }
+
+        this._installedExtensions.value = installedExtensions
     }
 
     private fun isValidExtension(extensionHolder: ExtensionHolder) = SemVer.parse(extensionHolder.extension!!.apiVersion) >= MINIMUM_SUPPORTED_EXTENSION_API
@@ -190,28 +194,16 @@ class ExtensionManager private constructor(private val ctx: Context) {
 
     inner class InstallListener : ExtensionInstallReceiver.Listener {
         override fun onExtensionInstalled() {
-            _installedExtensions.value!!.clear()
             loadExtensions()
-
-            _installedExtensions.value = _installedExtensions.value
-            Injector.getSourceRepository(ctx).reload()
         }
 
         override fun onExtensionUpdated() {
-            _installedExtensions.value!!.clear()
             loadExtensions()
-
-            _installedExtensions.value = _installedExtensions.value
-            Injector.getSourceRepository(ctx).reload()
         }
 
         override fun onExtensionUninstalled(packageName: String) {
-            _installedExtensions.value!!.clear()
             packageMap.remove(packageName)
             loadExtensions()
-
-            _installedExtensions.value = _installedExtensions.value
-            Injector.getSourceRepository(ctx).reload()
         }
 
     }

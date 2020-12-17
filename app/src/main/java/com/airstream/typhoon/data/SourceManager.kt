@@ -2,6 +2,8 @@ package com.airstream.typhoon.data
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.airstream.typhoon.utils.Injector
 import com.airstream.typhoon.utils.SyncCookieHandler
 import com.uvnode.typhoon.extensions.api.ApiCallbacks
@@ -28,10 +30,13 @@ class SourceManager(private val ctx: Context) {
 
     private val extensions = extensionManager.getInstalledExtensions()
 
-    fun getSources(): List<MetaSource> {
-        val sources = mutableListOf<MetaSource>()
+    val sourcesMap: MutableMap<String, Int> = mutableMapOf()
 
-        for(extension in extensions.value!!) {
+    fun getSources(): LiveData<List<MetaSource>> = Transformations.map(extensions) {
+        val sources = mutableListOf<MetaSource>()
+        sourcesMap.clear()
+
+        for (extension in extensions.value!!) {
             extension.extension?.sources?.forEach {
                 if (it is UsesContext) {
                     it.setContext(ctx)
@@ -44,11 +49,15 @@ class SourceManager(private val ctx: Context) {
                     it.setJSEClient(networkHelper.jseClient)
                 }
                 sources.add(it)
+                sourcesMap[it.source.id] = sources.size
             }
         }
 
-        return sources
+        Log.d(TAG, "getSources: ")
+
+        sources
     }
+
 
     suspend fun getSeries(source: MetaSource?, series: Series): Series? =
         suspendCoroutine {

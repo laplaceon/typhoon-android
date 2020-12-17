@@ -48,7 +48,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun getEpisodesList() {
         if (episodes.value == null) {
-            val source = sourceRepository.getSourceById(sourceId)
+            val source = sourceRepository.getSourceById(sourceId!!)
             if (source is HasListings) {
                 listings.value?.get(currentListing)?.let {
                     Log.d(TAG, "getEpisodesList: $it")
@@ -66,7 +66,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getListings() {
         if (listings.value == null) {
-            val source = sourceRepository.getSourceById(sourceId)
+            val source = sourceRepository.getSourceById(sourceId!!)
             viewModelScope.launch {
                 _listings.value = seriesRepository.getListings(source, series.value)
                 Log.d(TAG, "getListings: ${series.value}")
@@ -95,7 +95,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getSourceInfo() {
         if (!seriesInfoRetrieved) {
-            val source = sourceRepository.getSourceById(sourceId)
+            val source = sourceRepository.getSourceById(sourceId!!)
             viewModelScope.launch {
                 series.value = seriesRepository.getSeries(source, series.value!!)
                 seriesInfoRetrieved = true

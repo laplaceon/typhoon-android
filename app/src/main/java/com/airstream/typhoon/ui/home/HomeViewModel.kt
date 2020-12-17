@@ -29,9 +29,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     val seriesList: LiveData<List<Series>?> = _seriesList
 
-    val currentSource: LiveData<String> by lazy {
-        MutableLiveData(sourceRepository.currentSource)
-    }
+    val currentSource = sourceRepository.currentSource
 
     fun isSourceRankable(currentSource: String) = currentSource.isNotBlank() && (sourceRepository.getSourceById(currentSource) is Rankable)
 
@@ -57,7 +55,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     suspend fun getSeriesList() {
         if (seriesList.value == null) {
-            _seriesList.value = seriesRepository.getSeriesList(sourceRepository.getSourceById(currentSource.value))
+            _seriesList.value = seriesRepository.getSeriesList(currentSource.value?.let {
+                sourceRepository.getSourceById(
+                    it
+                )
+            })
             Log.d(TAG, "getSeriesList: Updated from data source")
         }
     }

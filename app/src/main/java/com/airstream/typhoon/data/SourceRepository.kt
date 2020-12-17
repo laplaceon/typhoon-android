@@ -7,38 +7,17 @@ import com.uvnode.typhoon.extensions.source.MetaSource
 
 class SourceRepository private constructor(private val sourceManager: SourceManager) {
 
-    private val _sources: MutableLiveData<List<MetaSource>> by lazy {
-        MutableLiveData<List<MetaSource>>()
+    val sources = sourceManager.getSources()
+
+    private val sourcesMap = sourceManager.sourcesMap
+
+    val currentSource: MutableLiveData<String> by lazy {
+        MutableLiveData<String>("")
     }
 
-    val sources: LiveData<List<MetaSource>> = _sources
+    fun getSourceByPos(pos: Int) = sources.value?.get(pos)
 
-    val sourcesMap: MutableMap<String, Int> = mutableMapOf()
-
-    var currentSource: String = ""
-
-    fun getSourcesList(): LiveData<List<MetaSource>> {
-        if (_sources.value == null) {
-            sourceManager.getSources().also { it ->
-                _sources.value = it
-                sourcesMap.clear()
-                it.withIndex().forEach {
-                    sourcesMap[it.value.source.id] = it.index
-                }
-            }
-            Log.d(TAG, "getSourcesList: Called")
-        }
-
-        Log.d(TAG, "getSourcesList: Cache Called")
-
-        return sources
-    }
-
-    fun getSourceById(id: String?) = sourcesMap[id]?.let { sources.value?.get(it) }
-
-    fun reload() {
-        sourceManager.getSources()
-    }
+    fun getSourceById(id: String) = sourcesMap.get(id)?.let { sources.value?.get(it) }
 
     companion object {
         private const val TAG = "SourceRepository"

@@ -67,8 +67,8 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.currentSource.observe(viewLifecycleOwner, Observer {
-            val currentRanking = savedInstanceState?.getInt("currentRanking", 0) ?: 0
-            if (!savedInstanceState?.getString("currentSource", "").equals(it)) {
+            val currentRanking = savedInstanceState?.getInt("currentRanking", 0)
+            if (savedInstanceState?.getString("currentSource") != it) {
                 homeViewModel.switchSource()
             }
 
@@ -91,11 +91,11 @@ class HomeFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("currentSource", homeViewModel.currentSource.value)
+        homeViewModel.currentSource.value?.let { outState.putString("currentSource", it) }
         navSpinner?.selectedItemPosition?.let { outState.putInt("currentRanking", it) }
     }
 
-    private fun updateUi(currentSource: String, pos: Int) {
+    private fun updateUi(currentSource: String, pos: Int?) {
         if (homeViewModel.isSourceRankable(currentSource)) {
             CoroutineScope(Dispatchers.Default).launch {
                 homeViewModel.getRankingsNames().let {
@@ -110,7 +110,7 @@ class HomeFragment : Fragment() {
                         rankingsAdapter?.clear()
                         rankingsAdapter?.addAll(it)
 
-                        navSpinner?.setSelection(pos)
+                        navSpinner?.setSelection(pos!!)
                     }
                 }
             }
