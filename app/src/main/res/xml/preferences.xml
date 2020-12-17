@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="general"
+        android:title="@string/preferences_category_general">
+        <CheckBoxPreference
+            android:key="record_history"
+            android:title="@string/preferences_preference_history"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="about"
+        android:title="@string/preferences_category_about">
+        <Preference
+            android:key="version"
+            android:selectable="false"
+            android:title="@string/preferences_preference_version"/>
+        <Preference
+            android:key="open_source"
+            android:selectable="true"
+            android:title="@string/preferences_preference_open_source"/>
+        <Preference
+            android:key="feedback"
+            android:selectable="true"
+            android:title="@string/preferences_preference_feedback"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

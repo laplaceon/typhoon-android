@@ -36,6 +36,8 @@ class EpisodeAdapter() : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
         }
     }
 
+    fun getItem(position: Int) = episodes[position]
+
     override fun getItemCount() = episodes.size
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {

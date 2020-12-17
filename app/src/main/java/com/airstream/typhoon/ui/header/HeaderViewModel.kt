@@ -19,18 +19,22 @@ class HeaderViewModel(application: Application) : AndroidViewModel(application) 
 
     val sources = sourceRepository.getSourcesList()
 
+    val currentSource: LiveData<String> by lazy {
+        MutableLiveData(sourceRepository.currentSource)
+    }
+
     fun getSourceNames(sources: List<MetaSource>) = sources.map { it.source.name }
 
     fun getCurrentSourceIndex() = sourceRepository.sourcesMap[preferences.getString(SOURCE_KEY, "")] ?: 0
 
     fun setCurrentSource(pos: Int) {
         val id = sourceRepository.sources.value?.get(pos)!!.source.id
-        if (sourceRepository.currentSource.value != id) {
+        if (sourceRepository.currentSource != id) {
             val preferencesEditor = preferences.edit()
             preferencesEditor.putString(SOURCE_KEY, id)
             preferencesEditor.apply()
             Log.d(TAG, "setCurrentSource: $id")
-            sourceRepository.setCurrentSource(id)
+            sourceRepository.currentSource = id
         }
     }
 

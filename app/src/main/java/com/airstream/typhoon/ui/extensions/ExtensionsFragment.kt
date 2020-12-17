@@ -14,17 +14,20 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
+import com.airstream.typhoon.adapter.ExtensionAdapter
 
 class ExtensionsFragment : Fragment() {
 
     private val extensionsViewModel: ExtensionsViewModel by viewModels()
+    private var extensionsAdapter = ExtensionAdapter()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_extensions, container, false)
 
@@ -34,6 +37,22 @@ class ExtensionsFragment : Fragment() {
         toolbar?.setDisplayShowTitleEnabled(true)
         navSpinner?.visibility = View.GONE
 
+        val extensionsList: RecyclerView = root.findViewById(R.id.listview_extension)
+        extensionsList.layoutManager = LinearLayoutManager(requireActivity())
+        extensionsList.setHasFixedSize(true)
+        extensionsList.adapter = extensionsAdapter
+
+        extensionsViewModel.installedExtensions.observe(viewLifecycleOwner, Observer {
+            val installableExtensions = extensionsViewModel.installableExtensions
+            Log.d(TAG, "onCreateView: $it")
+            extensionsAdapter.clear()
+            extensionsAdapter.addAll(it + installableExtensions)
+        })
+
         return root
+    }
+    
+    companion object {
+        private const val TAG = "ExtensionsFragment"
     }
 }

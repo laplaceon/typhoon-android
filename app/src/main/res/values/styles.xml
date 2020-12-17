@@ -12,6 +12,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.Fullscreen" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
@@ -28,6 +33,9 @@
     <style name="AppTheme.SeriesItem">
         <item name="android:background">@drawable/rounded_rectangle</item>
         <item name="android:clipChildren">true</item>
+    </style>
+
+    <style name="AppTheme.Player" parent="AppTheme.NoActionBar.Fullscreen">
     </style>
 
 </resources>

@@ -29,9 +29,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     val seriesList: LiveData<List<Series>?> = _seriesList
 
-    val currentSource = sourceRepository.currentSource
+    val currentSource: LiveData<String> by lazy {
+        MutableLiveData(sourceRepository.currentSource)
+    }
 
-    fun isSourceRankable(currentSource: String) = !currentSource.isBlank() && (sourceRepository.getSourceById(currentSource) is Rankable)
+    fun isSourceRankable(currentSource: String) = currentSource.isNotBlank() && (sourceRepository.getSourceById(currentSource) is Rankable)
 
     private suspend fun getRankings(): List<Ranking> {
         if (rankings == null) {

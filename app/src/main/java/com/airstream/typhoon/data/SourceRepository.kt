@@ -15,11 +15,7 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
 
     val sourcesMap: MutableMap<String, Int> = mutableMapOf()
 
-    private val _currentSource: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-
-    val currentSource: LiveData<String> = _currentSource
+    var currentSource: String = ""
 
     fun getSourcesList(): LiveData<List<MetaSource>> {
         if (_sources.value == null) {
@@ -40,8 +36,8 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
 
     fun getSourceById(id: String?) = sourcesMap[id]?.let { sources.value?.get(it) }
 
-    fun setCurrentSource(id: String?) {
-        _currentSource.value = id
+    fun reload() {
+        sourceManager.getSources()
     }
 
     companion object {

@@ -53,9 +53,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
                 listings.value?.get(currentListing)?.let {
                     Log.d(TAG, "getEpisodesList: $it")
                     viewModelScope.launch {
-                        val e = seriesRepository.getEpisodesListWithListing(source, series.value!!, it)
-                        Log.d(TAG, "getEpisodesList: $e")
-                        _episodes.value = e as ArrayList<Episode>?
+                        _episodes.value = seriesRepository.getEpisodesListWithListing(source, series.value!!, it) as ArrayList<Episode>?
                     }
                 }
             } else {

@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    compileSdkVersion 29
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.airstream.typhoon"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.5.0"
 
@@ -18,8 +18,15 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            postprocessing {
+                obfuscate false
+                optimizeCode true
+                removeUnusedCode false
+                removeUnusedResources true
+                proguardFiles 'proguard-rules.pro'
+            }
         }
     }
     compileOptions {
@@ -37,13 +44,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Networking
-    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // Video Player
-    implementation 'com.google.android.exoplayer:exoplayer:2.11.6'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.11.6'
+    implementation 'com.google.android.exoplayer:exoplayer:2.12.2'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.12.2'
 
     // Parsing
     implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
@@ -52,9 +59,10 @@ dependencies {
 
     // Extensions
     implementation 'com.github.uvnode:typhoon-android-extensions-lib:a1143e9a0e'
+    implementation 'net.swiftzer.semver:semver:1.1.1'
 
     // Ads & Analytics
-    implementation 'com.adcolony:sdk:4.2.0'
+    implementation 'com.adcolony:sdk:4.3.1'
     implementation 'com.flurry.android:analytics:12.1.0'
     implementation "com.google.android.gms:play-services-ads-identifier:17.0.0"
 
@@ -72,8 +80,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.google.android.material:material:1.1.0'
@@ -89,9 +97,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    // Other
-    implementation 'org.greenrobot:eventbus:3.2.0'
-    implementation 'net.swiftzer.semver:semver:1.1.1'
 
 }

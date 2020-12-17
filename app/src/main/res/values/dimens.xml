@@ -14,6 +14,11 @@
     <dimen name="episode_detail_margin">4dp</dimen>
     <dimen name="episode_padding">16dp</dimen>
 
+    <dimen name="extension_icon_dimension">48dp</dimen>
+    <dimen name="extension_name_size">14sp</dimen>
+    <dimen name="extension_margin">4dp</dimen>
+    <dimen name="extension_padding">8dp</dimen>
+
     <dimen name="listings_name_text_margin">4dp</dimen>
 
     <dimen name="series_elevation">2dp</dimen>

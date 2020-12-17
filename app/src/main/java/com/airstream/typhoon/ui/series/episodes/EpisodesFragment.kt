@@ -1,5 +1,6 @@
 package com.airstream.typhoon.ui.series.episodes
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +15,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
 import com.airstream.typhoon.adapter.EpisodeAdapter
+import com.airstream.typhoon.ui.player.PlayerActivity
+import com.airstream.typhoon.ui.series.SeriesActivity
 import com.airstream.typhoon.ui.series.SeriesViewModel
+import com.airstream.typhoon.utils.ItemClickSupport
 
 class EpisodesFragment : Fragment() {
 
@@ -32,6 +36,17 @@ class EpisodesFragment : Fragment() {
         val gridView: RecyclerView = root.findViewById(R.id.gridview_episodes)
         gridView.layoutManager = GridLayoutManager(requireActivity(), resources.getInteger(R.integer.gridview_episodes_columns))
         gridView.adapter = episodesAdapter
+
+        ItemClickSupport.addTo(gridView).setOnItemClickListener { recyclerView, position, v ->
+            val episode = episodesAdapter.getItem(position)
+
+            val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
+                putExtra("episode", episode)
+                putExtra("series", seriesViewModel.series.value)
+                putExtra("source", seriesViewModel.sourceId)
+            }
+            requireActivity().startActivity(intent)
+        }
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             frameLayout.visibility = View.VISIBLE

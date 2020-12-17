@@ -23,4 +23,13 @@
 
     <string name="listings_default">Default listing</string>
     <string name="listings_none">No listings</string>
+
+    <string name="preferences_category_general">General</string>
+    <string name="preferences_category_about">About</string>
+    <string name="preferences_preference_feedback">Send feedback</string>
+    <string name="preferences_preference_history">Enable watch history</string>
+    <string name="preferences_preference_open_source">Open source licenses</string>
+    <string name="preferences_preference_version">App version</string>
+
+    <string name="search_results">Results for %s</string>s
 </resources>

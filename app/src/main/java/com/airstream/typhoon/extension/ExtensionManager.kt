@@ -1,8 +1,14 @@
 package com.airstream.typhoon.extension
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.util.Log
+import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.airstream.typhoon.utils.Injector
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.uvnode.typhoon.extensions.Extension
@@ -11,23 +17,33 @@ import dalvik.system.PathClassLoader
 import net.swiftzer.semver.SemVer
 import okhttp3.*
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 class ExtensionManager private constructor(private val ctx: Context) {
 
-    private var installedExtensions: MutableList<ExtensionHolder> = mutableListOf()
-    private var availableExtensions: MutableList<ExtensionHolder> = mutableListOf()
-    private var packageMap: MutableMap<String, Int> = mutableMapOf()
-    private var downloads: Map<String, File> = emptyMap()
+    private val _installedExtensions: MutableLiveData<MutableList<ExtensionHolder>> by lazy {
+        MutableLiveData<MutableList<ExtensionHolder>>(mutableListOf())
+    }
+
+    private val installedExtensions: LiveData<MutableList<ExtensionHolder>> = _installedExtensions
+    private val availableExtensions: MutableList<ExtensionHolder> = mutableListOf()
+    private val packageMap: MutableMap<String, Int> = mutableMapOf()
+    private val downloads: MutableMap<String, File> = mutableMapOf()
+    private val extensionInstallReceiver = ExtensionInstallReceiver(InstallListener())
+
+    private val networkHelper = Injector.getNetworkHelper(ctx)
 
     init {
         getAvailableExtensionsFromRepo()
         loadExtensions()
+        extensionInstallReceiver.register(ctx)
     }
 
     private fun loadExtensions() {
         val packageManager = ctx.packageManager
-        val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_CONFIGURATIONS)
+
+        val installedPackages = packageManager.getInstalledPackages(PACKAGE_FLAGS)
 
         installedPackages.filter {
             isExtensionPackage(it)
@@ -51,28 +67,23 @@ class ExtensionManager private constructor(private val ctx: Context) {
                 extensionHolder.icon = icon
 
                 if (isValidExtension(extensionHolder)) {
-                    packageMap.put(extension.packageName, installedExtensions.size)
-                    installedExtensions.add(extensionHolder)
+                    packageMap[extension.packageName] = installedExtensions.value!!.size
+                    _installedExtensions.value!!.add(extensionHolder)
                 }
             }
         }
     }
 
-    private fun isValidExtension(extensionHolder: ExtensionHolder) =
-        SemVer.parse(extensionHolder.extension!!.apiVersion).compareTo(
-            MINIMUM_SUPPORTED_EXTENSION_API
-        ) >= 0
+    private fun isValidExtension(extensionHolder: ExtensionHolder) = SemVer.parse(extensionHolder.extension!!.apiVersion) >= MINIMUM_SUPPORTED_EXTENSION_API
 
     private fun isExtensionPackage(pkgInfo: PackageInfo) = pkgInfo.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE }
 
     private fun getAvailableExtensionsFromRepo() {
-        val networkHelper = Injector.getNetworkHelper(ctx)
-
         val request = Request.Builder().url(MAIN_REPO + "repo.json").get().build()
 
         networkHelper.okClient.newCall(request).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+                e.printStackTrace()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -102,7 +113,7 @@ class ExtensionManager private constructor(private val ctx: Context) {
                         extensionHolder.iconUrl = extensionNode.get("icon").asText()
 
                         if(packageMap.contains(packageName)) {
-                            var installedExtensionHolder = installedExtensions.get(packageMap.get(packageName)!!)
+                            val installedExtensionHolder = installedExtensions.value!![packageMap[packageName]!!]
                             if (versionCode > installedExtensionHolder.extension!!.versionCode) {
                                 installedExtensionHolder.hasUpdate = true
                                 installedExtensionHolder.url = url
@@ -124,6 +135,86 @@ class ExtensionManager private constructor(private val ctx: Context) {
             it.isInstalled or it.hasUpdate
         }
 
+    fun downloadAndInstall(apkUrl: String, packageName: String) {
+        if (apkUrl.isNotBlank()) {
+            val request = Request.Builder().url(apkUrl).get().build()
+
+            val fileName = request.url.pathSegments.last()
+
+            networkHelper.okClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        val downloadPath = ctx.filesDir.absolutePath
+                        val apkFile = File("$downloadPath/$fileName")
+                        apkFile.createNewFile()
+
+                        val fileOutputStream = FileOutputStream(apkFile)
+                        fileOutputStream.write(response.body?.bytes())
+                        fileOutputStream.close()
+                        install(apkFile, packageName)
+                    }
+                }
+
+            })
+        }
+    }
+
+    fun install(apkFile: File, packageName: String) {
+        downloads[packageName] = apkFile.absoluteFile
+
+        val apkUri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.provider", apkFile)
+        val intent = Intent(ctx, ExtensionInstallActivity::class.java).apply {
+            setDataAndType(apkUri, APK_MINE)
+            putExtra("downloadId", packageName)
+        }
+        ctx.startActivity(intent)
+    }
+
+    fun uninstall(packageName: String) {
+        val packageInstaller = ctx.packageManager.packageInstaller
+
+        val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, Uri.parse("package:$packageName")).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        ctx.startActivity(intent)
+    }
+
+    fun deleteDownload(packageName: String) {
+        downloads[packageName]?.delete()
+        downloads.remove(packageName)
+    }
+
+    inner class InstallListener : ExtensionInstallReceiver.Listener {
+        override fun onExtensionInstalled() {
+            _installedExtensions.value!!.clear()
+            loadExtensions()
+
+            _installedExtensions.value = _installedExtensions.value
+            Injector.getSourceRepository(ctx).reload()
+        }
+
+        override fun onExtensionUpdated() {
+            _installedExtensions.value!!.clear()
+            loadExtensions()
+
+            _installedExtensions.value = _installedExtensions.value
+            Injector.getSourceRepository(ctx).reload()
+        }
+
+        override fun onExtensionUninstalled(packageName: String) {
+            _installedExtensions.value!!.clear()
+            packageMap.remove(packageName)
+            loadExtensions()
+
+            _installedExtensions.value = _installedExtensions.value
+            Injector.getSourceRepository(ctx).reload()
+        }
+
+    }
 
     companion object {
         private const val EXTENSION_FEATURE = "typhoon.extension";
@@ -131,6 +222,10 @@ class ExtensionManager private constructor(private val ctx: Context) {
         private const val APK_MINE = "application/vnd.android.package-archive"
         private const val MAIN_REPO = "https://raw.githubusercontent.com/uvnode/typhoon-main-extensions/repo/"
         private val MINIMUM_SUPPORTED_EXTENSION_API = SemVer.parse("1.0.0");
+
+        private const val PACKAGE_FLAGS = PackageManager.GET_CONFIGURATIONS or PackageManager.GET_SIGNATURES
+
+        private const val TAG = "ExtensionManager"
 
         private var instance: ExtensionManager? = null;
 

@@ -26,7 +26,7 @@ import kotlinx.coroutines.*
 class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private lateinit var navSpinner: Spinner
+    private var navSpinner: Spinner? = null
     private var toolbar: ActionBar? = null
     private var seriesAdapter: SeriesAdapter = SeriesAdapter()
     private var rankingsAdapter: ArrayAdapter<CharSequence>? = null
@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         toolbar = (requireActivity() as AppCompatActivity).supportActionBar
         navSpinner = requireActivity().findViewById(R.id.nav_spinner)
 
-        navSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        navSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 homeViewModel.switchRanking(p2)
             }
@@ -56,20 +56,18 @@ class HomeFragment : Fragment() {
         gridView.setHasFixedSize(true)
         gridView.adapter = seriesAdapter
 
-        ItemClickSupport.addTo(gridView).setOnItemClickListener(object : ItemClickSupport.OnItemClickListener {
-            override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-                val series = seriesAdapter.getItem(position)
+        ItemClickSupport.addTo(gridView).setOnItemClickListener { recyclerView, position, v ->
+            val series = seriesAdapter.getItem(position)
 
-                val intent = Intent(requireActivity(), SeriesActivity::class.java).apply {
-                    putExtra("series", series)
-                    putExtra("source", homeViewModel.currentSource.value)
-                }
-                requireActivity().startActivity(intent)
+            val intent = Intent(requireActivity(), SeriesActivity::class.java).apply {
+                putExtra("series", series)
+                putExtra("source", homeViewModel.currentSource.value)
             }
-        })
+            requireActivity().startActivity(intent)
+        }
 
         homeViewModel.currentSource.observe(viewLifecycleOwner, Observer {
-            var currentRanking = savedInstanceState?.getInt("currentRanking", 0) ?: 0
+            val currentRanking = savedInstanceState?.getInt("currentRanking", 0) ?: 0
             if (!savedInstanceState?.getString("currentSource", "").equals(it)) {
                 homeViewModel.switchSource()
             }
@@ -84,6 +82,8 @@ class HomeFragment : Fragment() {
                 seriesAdapter.clear()
                 seriesAdapter.addAll(it)
             }
+
+            Log.d(TAG, "onCreateView: get $it")
         })
 
         return root
@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("currentSource", homeViewModel.currentSource.value)
-        outState.putInt("currentRanking", navSpinner.selectedItemPosition)
+        navSpinner?.selectedItemPosition?.let { outState.putInt("currentRanking", it) }
     }
 
     private fun updateUi(currentSource: String, pos: Int) {
@@ -100,22 +100,22 @@ class HomeFragment : Fragment() {
             CoroutineScope(Dispatchers.Default).launch {
                 homeViewModel.getRankingsNames().let {
                     withContext(Dispatchers.Main) {
-                        navSpinner.visibility = View.VISIBLE
+                        navSpinner?.visibility = View.VISIBLE
                         toolbar?.setDisplayShowTitleEnabled(false)
 
                         rankingsAdapter = ArrayAdapter(requireActivity().toolbar.context, android.R.layout.simple_spinner_item)
                         rankingsAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        navSpinner.adapter = rankingsAdapter
+                        navSpinner?.adapter = rankingsAdapter
 
                         rankingsAdapter?.clear()
                         rankingsAdapter?.addAll(it)
 
-                        navSpinner.setSelection(pos)
+                        navSpinner?.setSelection(pos)
                     }
                 }
             }
         } else {
-            navSpinner.visibility = View.GONE
+            navSpinner?.visibility = View.GONE
             toolbar?.setDisplayShowTitleEnabled(true)
             CoroutineScope(Dispatchers.Main).launch {
                 homeViewModel.getSeriesList()

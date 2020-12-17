@@ -1,6 +1,5 @@
 package com.airstream.typhoon.ui.header
 
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.airstream.typhoon.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class HeaderFragment : Fragment() {
@@ -25,6 +25,7 @@ class HeaderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_header, container, false)
+        val sourceImage: ImageView = root.findViewById(R.id.image_sources)
         val infoButton: ImageButton = root.findViewById(R.id.button_info)
         sourcesSpinner = root.findViewById(R.id.spinner_sources)
 
@@ -43,6 +44,13 @@ class HeaderFragment : Fragment() {
             Log.d(TAG, "onCreateView: $it")
             adapter?.addAll(headerViewModel.getSourceNames(it))
             sourcesSpinner.setSelection(headerViewModel.getCurrentSourceIndex())
+        })
+
+        headerViewModel.currentSource.observe(viewLifecycleOwner, Observer {
+            val currentSource = headerViewModel.sources.value?.get(headerViewModel.getCurrentSourceIndex())
+            val image = currentSource?.source?.image
+
+            Picasso.get().load(image).centerCrop().fit().placeholder(R.drawable.source_image_placeholder).into(sourceImage)
         })
         
         infoButton.setOnClickListener {

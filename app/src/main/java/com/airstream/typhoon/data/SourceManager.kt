@@ -26,12 +26,12 @@ class SourceManager(private val ctx: Context) {
 
     private val extensionManager = Injector.getExtensionManager(ctx)
 
+    private val extensions = extensionManager.getInstalledExtensions()
+
     fun getSources(): List<MetaSource> {
-        val extensions = extensionManager.getInstalledExtensions()
+        val sources = mutableListOf<MetaSource>()
 
-        var sources = mutableListOf<MetaSource>()
-
-        for(extension in extensions) {
+        for(extension in extensions.value!!) {
             extension.extension?.sources?.forEach {
                 if (it is UsesContext) {
                     it.setContext(ctx)
