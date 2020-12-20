@@ -47,7 +47,6 @@ class HomeFragment : Fragment() {
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
             }
         }
 
@@ -67,8 +66,13 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.currentSource.observe(viewLifecycleOwner, Observer {
-            val currentRanking = savedInstanceState?.getInt("currentRanking", 0)
-            if (savedInstanceState?.getString("currentSource") != it) {
+            var currentRanking = 0
+            if (savedInstanceState != null) {
+                currentRanking = savedInstanceState.getInt("currentRanking", 0)
+                if (savedInstanceState.getString("currentSource") != it) {
+                    homeViewModel.switchSource()
+                }
+            } else {
                 homeViewModel.switchSource()
             }
 
@@ -81,9 +85,11 @@ class HomeFragment : Fragment() {
             it?.let {
                 seriesAdapter.clear()
                 seriesAdapter.addAll(it)
-            }
 
-            Log.d(TAG, "onCreateView: get $it")
+                gridView.adapter = seriesAdapter
+
+                Log.d(TAG, "onCreateView: get $it")
+            }
         })
 
         return root
@@ -95,7 +101,7 @@ class HomeFragment : Fragment() {
         navSpinner?.selectedItemPosition?.let { outState.putInt("currentRanking", it) }
     }
 
-    private fun updateUi(currentSource: String, pos: Int?) {
+    private fun updateUi(currentSource: String, pos: Int) {
         if (homeViewModel.isSourceRankable(currentSource)) {
             CoroutineScope(Dispatchers.Default).launch {
                 homeViewModel.getRankingsNames().let {
@@ -110,7 +116,7 @@ class HomeFragment : Fragment() {
                         rankingsAdapter?.clear()
                         rankingsAdapter?.addAll(it)
 
-                        navSpinner?.setSelection(pos!!)
+                        navSpinner?.setSelection(pos)
                     }
                 }
             }

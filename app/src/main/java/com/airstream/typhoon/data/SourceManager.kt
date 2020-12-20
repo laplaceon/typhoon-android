@@ -49,7 +49,7 @@ class SourceManager(private val ctx: Context) {
                     it.setJSEClient(networkHelper.jseClient)
                 }
                 sources.add(it)
-                sourcesMap[it.source.id] = sources.size
+                sourcesMap[it.source.id] = sources.size - 1
             }
         }
 

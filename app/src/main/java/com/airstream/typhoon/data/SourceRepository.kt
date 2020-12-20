@@ -9,15 +9,19 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
 
     val sources = sourceManager.getSources()
 
-    private val sourcesMap = sourceManager.sourcesMap
+    val sourcesMap = sourceManager.sourcesMap
 
     val currentSource: MutableLiveData<String> by lazy {
-        MutableLiveData<String>("")
+        MutableLiveData<String>()
     }
 
     fun getSourceByPos(pos: Int) = sources.value?.get(pos)
 
-    fun getSourceById(id: String) = sourcesMap.get(id)?.let { sources.value?.get(it) }
+    fun getSourceById(id: String) = sourcesMap[id]?.let { sources.value?.get(it) }
+
+    fun setCurrentSource(id: String?) {
+        currentSource.value = id
+    }
 
     companion object {
         private const val TAG = "SourceRepository"

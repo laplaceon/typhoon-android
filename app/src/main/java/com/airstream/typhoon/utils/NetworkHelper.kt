@@ -17,7 +17,7 @@ class NetworkHelper private constructor(ctx: Context) {
     val jseClient: JSEClient = JSEClient(ctx)
 
     companion object {
-        @Volatile private var instance: NetworkHelper? = null;
+        @Volatile private var instance: NetworkHelper? = null
 
         fun getInstance(ctx: Context) =
             instance ?: synchronized(this) {

@@ -56,9 +56,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun getSeriesList() {
         if (seriesList.value == null) {
             _seriesList.value = seriesRepository.getSeriesList(currentSource.value?.let {
-                sourceRepository.getSourceById(
-                    it
-                )
+                sourceRepository.getSourceById(it)
             })
             Log.d(TAG, "getSeriesList: Updated from data source")
         }

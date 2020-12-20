@@ -24,21 +24,22 @@ class HeaderViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getSourceNames(sources: List<MetaSource>) = sources.map { it.source.name }
 
-    fun getCurrentSourceIndex() = preferences.getInt(CURRENT_SOURCE_INDEX, 0)
+    fun getCurrentSourceIndex() = sourceRepository.sourcesMap[preferences.getString(KEY_CURRENT_SOURCE, "")] ?: 0
 
-    fun setCurrentSourceByPos(id: String) {
+    fun setCurrentSource(pos: Int) {
+        val id = sourceRepository.sources.value?.get(pos)!!.source.id
         if (sourceRepository.currentSource.value != id) {
             val preferencesEditor = preferences.edit()
-            preferencesEditor.putString(CURRENT_SOURCE_INDEX, id)
+            preferencesEditor.putString(KEY_CURRENT_SOURCE, id)
             preferencesEditor.apply()
             Log.d(TAG, "setCurrentSource: $id")
-            sourceRepository.currentSource.value = id
+            sourceRepository.setCurrentSource(id)
         }
     }
 
-    fun getCurrentSourceObj(): Source {
+    fun getCurrentSource(): Source? {
         if (getCurrentSourceIndex() > sources.value!!.size) {
-
+            return null
         }
 
         return sources.value?.get(getCurrentSourceIndex())!!.source
@@ -46,6 +47,6 @@ class HeaderViewModel(application: Application) : AndroidViewModel(application) 
 
     companion object {
         private const val TAG = "HeaderViewModel"
-        private const val CURRENT_SOURCE_INDEX = "current_source_index"
+        private const val KEY_CURRENT_SOURCE = "current_source"
     }
 }

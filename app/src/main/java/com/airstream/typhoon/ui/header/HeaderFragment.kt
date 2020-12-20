@@ -29,28 +29,28 @@ class HeaderFragment : Fragment() {
         val infoButton: ImageButton = root.findViewById(R.id.button_info)
         sourcesSpinner = root.findViewById(R.id.spinner_sources)
 
-//        sourcesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                Log.d(TAG, "onItemSelected: $p2")
-//                headerViewModel.setCurrentSourceByPos(p2)
-//            }
-//
-//            override fun onNothingSelected(p0: AdapterView<*>?) {
-//                TODO("Not yet implemented")
-//            }
-//        }
+        sourcesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                Log.d(TAG, "onItemSelected: $p2")
+                headerViewModel.setCurrentSource(p2)
+            }
 
-        headerViewModel.sources.observe(viewLifecycleOwner, Observer {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
+
+        headerViewModel.sources.observe(viewLifecycleOwner, {
             if (it != null) {
-                Log.d(TAG, "onCreateView: $it")
                 adapter?.clear()
                 adapter?.addAll(headerViewModel.getSourceNames(it))
+                val selection = headerViewModel.getCurrentSourceIndex()
+                Log.d(TAG, "onCreateView: $selection")
                 sourcesSpinner.setSelection(headerViewModel.getCurrentSourceIndex())
             }
         })
 
-        headerViewModel.currentSource.observe(viewLifecycleOwner, Observer {
-            val currentSource = headerViewModel.getCurrentSourceObj()
+        headerViewModel.currentSource.observe(viewLifecycleOwner, {
+            val currentSource = headerViewModel.getCurrentSource()
             val image: String? = currentSource?.image
 
             Picasso.get().load(image).centerCrop().fit().placeholder(R.drawable.source_image_placeholder).into(sourceImage)
