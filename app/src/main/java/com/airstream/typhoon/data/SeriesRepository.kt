@@ -1,12 +1,12 @@
 package com.airstream.typhoon.data
 
-import com.uvnode.typhoon.extensions.model.Listing
-import com.uvnode.typhoon.extensions.model.Ranking
-import com.uvnode.typhoon.extensions.model.Series
+import com.uvnode.typhoon.extensions.model.*
 import com.uvnode.typhoon.extensions.source.MetaSource
 import kotlinx.coroutines.*
 
 class SeriesRepository private constructor(private val sourceManager: SourceManager) {
+
+    suspend fun search(sourceById: MetaSource?, filters: List<Filter<Any>>, page: Int): PaginatedList? = sourceManager.search(sourceById, filters, page)
 
     suspend fun getRankings(sourceById: MetaSource?): List<Ranking>? = sourceManager.getRankings(sourceById)
 

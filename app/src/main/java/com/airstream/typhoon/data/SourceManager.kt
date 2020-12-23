@@ -58,6 +58,23 @@ class SourceManager(private val ctx: Context) {
         sources
     }
 
+    fun getFilters(source: MetaSource?): List<Filter<Any>>? = (source as Filterable).filters
+
+    suspend fun search(source: MetaSource?, filters: List<Filter<Any>>, page: Int): PaginatedList? =
+        suspendCoroutine {
+            val callback = object: ApiCallbacks {
+                override fun onFailure(error: ApiError?) {
+                    it.resume(null)
+                }
+
+                override fun onResponse(response: ApiResponse?) {
+                    val results: PaginatedList = response?.get() as PaginatedList
+                    it.resume(results)
+                }
+            }
+
+            (source as Filterable).search(callback, filters, page)
+        }
 
     suspend fun getSeries(source: MetaSource?, series: Series): Series? =
         suspendCoroutine {

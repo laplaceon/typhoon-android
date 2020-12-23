@@ -58,7 +58,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
 
     // Extensions
-    implementation 'com.github.uvnode:typhoon-android-extensions-lib:a1143e9a0e'
+    implementation 'com.github.uvnode:typhoon-android-extensions-lib:49e8fd2fa1'
     implementation 'net.swiftzer.semver:semver:1.1.1'
 
     // Ads & Analytics

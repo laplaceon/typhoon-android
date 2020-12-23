@@ -1,11 +1,13 @@
 package com.airstream.typhoon.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
 import com.squareup.picasso.Picasso
@@ -15,23 +17,27 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.ViewHolder>() {
 
     private val series: MutableList<Series> = mutableListOf()
 
-    val onBottomReachedListener: RecyclerListener.OnBottomReachedListener? = null
+    var onBottomReachedListener: RecyclerListener.OnBottomReachedListener? = null
 
     fun clear() {
         val size = itemCount
         series.clear()
-        notifyItemRangeRemoved(0, size)
+        this.notifyItemRangeRemoved(0, size)
     }
 
     fun add(series: Series) {
         this.series.add(series)
-        notifyItemInserted(itemCount)
+        this.notifyItemInserted(itemCount)
+    }
+
+    fun reset() {
+        this.series.clear()
     }
 
     fun addAll(series: List<Series>) {
         val size = itemCount
         this.series.addAll(series)
-        notifyItemRangeInserted(size, series.size)
+        this.notifyItemRangeInserted(size, series.size)
     }
 
     fun getItem(position: Int) = series[position]
@@ -59,7 +65,21 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.ViewHolder>() {
         holder.title.text = s.title
 
         if (null != onBottomReachedListener && position == itemCount - 1) {
-            onBottomReachedListener.onBottomReached(position)
+            onBottomReachedListener!!.onBottomReached(position)
         }
+    }
+    
+    companion object {
+        private const val TAG = "SeriesAdapter"
+    }
+}
+
+object SeriesDiffCallback : DiffUtil.ItemCallback<Series>() {
+    override fun areItemsTheSame(oldItem: Series, newItem: Series): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun areContentsTheSame(oldItem: Series, newItem: Series): Boolean {
+        return oldItem.id == newItem.id
     }
 }

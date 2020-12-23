@@ -3,6 +3,8 @@ package com.airstream.typhoon.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.uvnode.typhoon.extensions.model.Filter
+import com.uvnode.typhoon.extensions.model.Ranking
 import com.uvnode.typhoon.extensions.source.MetaSource
 
 class SourceRepository private constructor(private val sourceManager: SourceManager) {
@@ -22,6 +24,8 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
     fun setCurrentSource(id: String?) {
         currentSource.value = id
     }
+
+    fun getFilters(sourceById: MetaSource?): List<Filter<Any>>? = sourceManager.getFilters(sourceById)
 
     companion object {
         private const val TAG = "SourceRepository"
