@@ -12,6 +12,25 @@
     <string name="menu_library">Library</string>
     <string name="menu_history">History</string>
 
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_library_empty">You have no lists</string>
+    <string name="dialog_library_list_added">List was added</string>
+    <string name="dialog_library_list_field_blank">Field was left blank</string>
+    <string name="dialog_library_list_new">New list</string>
+    <string name="dialog_library_list_new_name">New list name</string>
+    <string name="dialog_library_list_rename">Rename list</string>
+    <string name="dialog_library_list_add_series">Add to Library</string>
+    <string name="dialog_library_list_remove_series_confirm">Are you sure you want to remove this series from the list?</string>
+    <string name="dialog_player_mirror_choice">Choose Mirror</string>
+    <string name="dialog_source_notready_title">Not Ready</string>
+    <string name="dialog_source_notready_desc">This source has not been updated and might not work. Use at your own risk!</string>
+    <string name="dialog_source_info_description">Description</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_yes">Yes</string>
+
+
     <string name="action_search">Search</string>
 
     <string name="series_completed">Completed</string>
@@ -20,6 +39,19 @@
     <string name="tab_episodes">Episodes</string>
     <string name="tab_details">Details</string>
     <string name="tab_recommendations">Recommendations</string>
+
+    <string name="player_control_source_mirror">Select mirror</string>
+    <string name="player_control_source_web">Switch</string>
+    <string name="player_error_episode_broken">Episode broken. Try another source</string>
+    <string name="player_error_episode_unknown">Error retrieving episode</string>
+    <string name="player_error_links_notfound">No links were found</string>
+    <string name="player_error_mirror_broken">Choose another mirror, this mirror is broken</string>
+    <string name="player_error_source_not_found">Source for episode was not found</string>
+    <string name="player_error_request_timeout">Request timed out</string>
+    <string name="player_video_loading">Loading video&#8230;</string>
+    <string name="player_video_options_none">There are no more video options</string>
+    <string name="player_web_switching">Switching to web player</string>
+
 
     <string name="listings_default">Default listing</string>
     <string name="listings_none">No listings</string>

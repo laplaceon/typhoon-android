@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@android:color/black">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:controller_layout_id="@layout/controls_player"/>
+
+    <Button
+        android:id="@+id/switcher_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_2"
+        android:padding="@dimen/player_source_controls_padding"
+        android:layout_marginRight="@dimen/player_source_controls_margin"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:text="@string/player_control_source_web"
+        android:layout_marginTop="@dimen/player_source_controls_layout_padding"
+        android:layout_marginEnd="@dimen/player_source_controls_margin"
+        android:layout_toStartOf="@id/selector_mirror"
+        android:layout_toLeftOf="@id/selector_mirror" />
+
+    <TextView
+        android:id="@+id/selector_mirror"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_2"
+        android:padding="@dimen/player_source_controls_padding"
+        android:layout_marginRight="@dimen/player_source_controls_margin"
+        android:textColor="@android:color/white"
+        android:text="@string/player_control_source_mirror"
+        android:layout_marginTop="@dimen/player_source_controls_layout_padding"
+        android:layout_marginEnd="@dimen/player_source_controls_margin"
+        android:layout_toStartOf="@id/switcher_resolution"
+        android:layout_toLeftOf="@id/switcher_resolution" />
+
+    <TextView
+        android:id="@+id/switcher_resolution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black_2"
+        android:padding="@dimen/player_source_controls_padding"
+        android:textColor="@android:color/white"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/player_source_controls_layout_padding"
+        android:layout_marginRight="@dimen/player_source_controls_margin"
+        android:layout_marginEnd="@dimen/player_source_controls_margin" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

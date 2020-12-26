@@ -16,22 +16,22 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     val currentSource = sourceRepository.currentSource
 
-    private fun getFiltersList(): MutableList<Filter<Any>> {
-        val filters: MutableList<Filter<Any>> = sourceRepository.getFilters(currentSource.value?.let {
+    private fun getFiltersList(): MutableList<Filter<*>> {
+        val filters: MutableList<Filter<*>> = sourceRepository.getFilters(currentSource.value?.let {
             sourceRepository.getSourceById(it)
         })?.toMutableList() ?: mutableListOf()
 
-        filters.add(0, Filter.Query("") as Filter<Any>)
+        filters.add(0, Filter.Query(""))
 
         return filters
     }
 
-    private val filters: List<Filter<Any>> = getFiltersList()
+    private val filters: MutableList<Filter<*>> = getFiltersList()
     var q: String
         get() = filters[0].state as String
         set(value) {
             _seriesList.value = null
-            filters[0].state = value
+            filters[0] = Filter.Query(value)
         }
     var page = 1
     var lastItem: Int? = null
@@ -46,14 +46,14 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         if (!append && seriesList.value == null) {
             val result = seriesRepository.search(currentSource.value?.let {
                 sourceRepository.getSourceById(it)
-            }, filters, page)
+            }, filters as List<Filter<Any>>, page)
 
             _seriesList.value = result
             Log.d(TAG, "getSeriesList: Updated from network")
         } else if (append) {
             val result = seriesRepository.search(currentSource.value?.let {
                 sourceRepository.getSourceById(it)
-            }, filters, page)
+            }, filters as List<Filter<Any>>, page)
 
             _seriesList.value = PaginatedList(_seriesList.value!!.list + result!!.list, result.isHasNext)
 

@@ -37,7 +37,7 @@ class EpisodesFragment : Fragment() {
         gridView.layoutManager = GridLayoutManager(requireActivity(), resources.getInteger(R.integer.gridview_episodes_columns))
         gridView.adapter = episodesAdapter
 
-        ItemClickSupport.addTo(gridView).setOnItemClickListener { recyclerView, position, v ->
+        ItemClickSupport.addTo(gridView).setOnItemClickListener { _, position, v ->
             val episode = episodesAdapter.getItem(position)
 
             val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {

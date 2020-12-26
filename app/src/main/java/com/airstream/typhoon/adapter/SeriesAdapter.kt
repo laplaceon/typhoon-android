@@ -17,7 +17,7 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.ViewHolder>() {
 
     private val series: MutableList<Series> = mutableListOf()
 
-    var onBottomReachedListener: RecyclerListener.OnBottomReachedListener? = null
+//    var onBottomReachedListener: RecyclerListener.OnBottomReachedListener? = null
 
     fun clear() {
         val size = itemCount
@@ -64,9 +64,9 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.ViewHolder>() {
         }
         holder.title.text = s.title
 
-        if (null != onBottomReachedListener && position == itemCount - 1) {
-            onBottomReachedListener!!.onBottomReached(position)
-        }
+//        if (null != onBottomReachedListener && position == itemCount - 1) {
+//            onBottomReachedListener!!.onBottomReached(position)
+//        }
     }
     
     companion object {

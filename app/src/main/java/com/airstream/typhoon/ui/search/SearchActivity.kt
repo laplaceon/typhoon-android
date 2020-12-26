@@ -28,29 +28,27 @@ import kotlinx.coroutines.launch
 class SearchActivity: AppCompatActivity() {
 
     private val searchViewModel: SearchViewModel by viewModels()
+    private val seriesAdapter = SeriesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val seriesAdapter = SeriesAdapter()
-
-        seriesAdapter.onBottomReachedListener = RecyclerListener.OnBottomReachedListener {
-            Log.d(TAG, "reached bottom")
-            if(searchViewModel.seriesList.value!!.isHasNext && (searchViewModel.lastItem != it)) {
-                searchViewModel.page++
-                CoroutineScope(Dispatchers.Main).launch {
-                    searchViewModel.search(true)
-                }
-                searchViewModel.lastItem = it
-                Toast.makeText(this, R.string.loading_series, Toast.LENGTH_SHORT).show()
-            }
-        }
+//        seriesAdapter.onBottomReachedListener = RecyclerListener.OnBottomReachedListener {
+//            Log.d(TAG, "reached bottom")
+//            if(searchViewModel.seriesList.value!!.isHasNext && (searchViewModel.lastItem != it)) {
+//                searchViewModel.page++
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    searchViewModel.search(true)
+//                }
+//                searchViewModel.lastItem = it
+//                Toast.makeText(this, R.string.loading_series, Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
         val gridView: RecyclerView = findViewById(R.id.gridview_search)
         gridView.layoutManager = GridLayoutManager(this, resources.getInteger(R.integer.gridview_series_columns))
         gridView.setHasFixedSize(true)
-        gridView.adapter = seriesAdapter
 
         ItemClickSupport.addTo(gridView).setOnItemClickListener { recyclerView, position, v ->
             val series = seriesAdapter.getItem(position)
@@ -61,6 +59,8 @@ class SearchActivity: AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        gridView.adapter = seriesAdapter
 
         val filterFloatingActionButton: FloatingActionButton = findViewById(R.id.fab_filter)
         filterFloatingActionButton.setOnClickListener {

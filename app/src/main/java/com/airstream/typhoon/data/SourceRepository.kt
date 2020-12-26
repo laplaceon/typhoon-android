@@ -25,7 +25,7 @@ class SourceRepository private constructor(private val sourceManager: SourceMana
         currentSource.value = id
     }
 
-    fun getFilters(sourceById: MetaSource?): List<Filter<Any>>? = sourceManager.getFilters(sourceById)
+    fun getFilters(sourceById: MetaSource?): List<Filter<*>>? = sourceManager.getFilters(sourceById)
 
     companion object {
         private const val TAG = "SourceRepository"

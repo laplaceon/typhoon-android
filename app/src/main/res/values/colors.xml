@@ -6,4 +6,6 @@
     <color name="transparent_black">#88000000</color>
     <color name="transparent_black_2">#DD000000</color>
     <color name="transparent">#00000000</color>
+    <color name="light_gray">#FFBEBEBE</color>
+    <color name="very_light_gray">#ffeeeeee</color>
 </resources>

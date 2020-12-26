@@ -68,7 +68,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
         if (listings.value == null) {
             val source = sourceRepository.getSourceById(sourceId!!)
             viewModelScope.launch {
-                _listings.value = seriesRepository.getListings(source, series.value)
+                _listings.value = seriesRepository.getListings(source, series.value!!)
                 Log.d(TAG, "getListings: ${series.value}")
             }
         }

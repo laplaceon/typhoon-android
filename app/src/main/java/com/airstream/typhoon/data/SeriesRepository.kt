@@ -16,11 +16,15 @@ class SeriesRepository private constructor(private val sourceManager: SourceMana
 
     suspend fun getSeries(sourceById: MetaSource?, series: Series) = sourceManager.getSeries(sourceById, series)
 
-    suspend fun getListings(sourceById: MetaSource?, series: Series?) = sourceManager.getListings(sourceById, series)
+    suspend fun getListings(sourceById: MetaSource?, series: Series) = sourceManager.getListings(sourceById, series)
 
     suspend fun getEpisodesList(sourceById: MetaSource?, series: Series) = sourceManager.getEpisodesList(sourceById, series)
 
     suspend fun getEpisodesListWithListing(sourceById: MetaSource?, series: Series, listing: Listing) = sourceManager.getEpisodesList(sourceById, series, listing)
+
+    suspend fun getVideoUris(sourceById: MetaSource?, series: Series, episode: Episode) = sourceManager.getVideoUris(sourceById, series, episode)
+
+    suspend fun getVideoUris(sourceById: MetaSource?, series: Series, episode: Episode, mirror: Mirror) = sourceManager.getVideoUris(sourceById, series, episode, mirror)
 
     companion object {
         @Volatile private var instance: SeriesRepository? = null;

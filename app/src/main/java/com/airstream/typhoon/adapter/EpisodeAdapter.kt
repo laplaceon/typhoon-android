@@ -11,7 +11,7 @@ import com.airstream.typhoon.R
 import com.squareup.picasso.Picasso
 import com.uvnode.typhoon.extensions.model.Episode
 
-class EpisodeAdapter() : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
+class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
 
     private val episodes: MutableList<Episode> = mutableListOf()
 
@@ -65,7 +65,7 @@ class EpisodeAdapter() : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
             holder.title.isSingleLine = true
         }
 
-        if (episode.num.isNotEmpty()) {
+        if (episode.num!!.isNotEmpty()) {
             holder.number.visibility = View.VISIBLE
             holder.number.text = episode.num
         } else {

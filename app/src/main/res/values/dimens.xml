@@ -21,6 +21,11 @@
 
     <dimen name="listings_name_text_margin">4dp</dimen>
 
+    <dimen name="player_control_margin">8dp</dimen>
+    <dimen name="player_source_controls_margin">18dp</dimen>
+    <dimen name="player_source_controls_padding">14dp</dimen>
+    <dimen name="player_source_controls_layout_padding">20dp</dimen>
+
     <dimen name="series_elevation">2dp</dimen>
     <dimen name="series_padding">2dp</dimen>
     <dimen name="series_image_preview">216dp</dimen>

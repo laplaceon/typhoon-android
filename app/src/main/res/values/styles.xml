@@ -38,4 +38,13 @@
     <style name="AppTheme.Player" parent="AppTheme.NoActionBar.Fullscreen">
     </style>
 
+    <style name="PlayerControlText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:textColor">@color/light_gray</item>
+    </style>
+
+
 </resources>

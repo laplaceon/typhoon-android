@@ -28,13 +28,15 @@ class SeriesDetailsFragment : Fragment() {
         val completedIndicator: TextView = root.findViewById(R.id.text_completed)
 
         seriesViewModel.series.observe(viewLifecycleOwner, Observer {
-            Picasso.get().load(it.image).into(poster)
-            description.text = it.description
+            it?.let {
+                Picasso.get().load(it.image).into(poster)
+                description.text = it.description
 
-            if (it.isCompleted) {
-                completedIndicator.setText(R.string.series_completed)
-            } else {
-                completedIndicator.setText(R.string.series_ongoing)
+                if (it.isCompleted) {
+                    completedIndicator.setText(R.string.series_completed)
+                } else {
+                    completedIndicator.setText(R.string.series_ongoing)
+                }
             }
         })
 
