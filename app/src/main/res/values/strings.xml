@@ -32,6 +32,8 @@
 
 
     <string name="action_search">Search</string>
+    <string name="action_managelibrary">Manage Library</string>
+    <string name="action_library_add">Add to Library</string>
 
     <string name="series_completed">Completed</string>
     <string name="series_ongoing">Ongoing</string>

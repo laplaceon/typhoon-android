@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,10 @@ class SearchActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 //        seriesAdapter.onBottomReachedListener = RecyclerListener.OnBottomReachedListener {
 //            Log.d(TAG, "reached bottom")
@@ -83,7 +88,6 @@ class SearchActivity: AppCompatActivity() {
             searchViewModel.q = intent.extras?.getString("query").toString()
         }
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         updateSearch()
     }
 

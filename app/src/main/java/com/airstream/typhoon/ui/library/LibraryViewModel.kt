@@ -1,13 +1,25 @@
 package com.airstream.typhoon.ui.library
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
+import com.airstream.typhoon.data.library.entities.Category
+import com.airstream.typhoon.utils.Injector
 
-class LibraryViewModel : ViewModel() {
+class LibraryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is library Fragment"
+    private val library = Injector.getLibrary(application.applicationContext)
+    val categoryDao = library.categoryDao()
+    val seriesDao = library.seriesDao()
+
+    private val _selectedCategory: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>(0)
     }
-    val text: LiveData<String> = _text
+
+    val selectedCategory: LiveData<Int> = _selectedCategory
+
+    val categories: LiveData<List<Category>> = categoryDao.getAll().asLiveData()
+
+    fun setCategory(pos: Int) {
+        _selectedCategory.value = pos
+    }
 }

@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.search.SearchActivity" />
+        <activity android:name=".ui.search.SearchActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.series.SeriesActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.settings.SettingsActivity" />
         <activity android:name=".ui.player.PlayerActivity" android:theme="@style/AppTheme.Player" android:configChanges="orientation|keyboardHidden|screenSize" />

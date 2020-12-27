@@ -3,6 +3,7 @@ package com.airstream.typhoon.ui.series
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -78,6 +79,11 @@ class SeriesActivity : AppCompatActivity() {
                 EpisodesControlsFragment.TAG + "_" + TAG
             ).commit()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.series, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
