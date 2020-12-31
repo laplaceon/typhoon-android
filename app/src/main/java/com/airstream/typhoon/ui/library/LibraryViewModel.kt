@@ -3,6 +3,7 @@ package com.airstream.typhoon.ui.library
 import android.app.Application
 import androidx.lifecycle.*
 import com.airstream.typhoon.data.library.entities.Category
+import com.airstream.typhoon.data.library.entities.Series
 import com.airstream.typhoon.utils.Injector
 
 class LibraryViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,4 +23,6 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     fun setCategory(pos: Int) {
         _selectedCategory.value = pos
     }
+
+
 }

@@ -5,14 +5,16 @@ import androidx.room.*
 @Entity(foreignKeys = [ForeignKey(
     entity = Category::class,
     parentColumns = ["id"],
-    childColumns = ["columnId"],
+    childColumns = ["categoryId"],
     onDelete = ForeignKey.CASCADE
 )])
 data class Series(
-    @PrimaryKey val id: Int,
     val seriesId: String,
-    val columnId: Int,
-    val source: String,
+    val categoryId: Int,
+    val sourceId: String,
+    val uri: String,
     val title: String,
     val image: String?
-)
+) {
+    @PrimaryKey(autoGenerate = true) var id: Int = 0
+}

@@ -39,17 +39,19 @@ class SearchActivity: AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-//        seriesAdapter.onBottomReachedListener = RecyclerListener.OnBottomReachedListener {
-//            Log.d(TAG, "reached bottom")
-//            if(searchViewModel.seriesList.value!!.isHasNext && (searchViewModel.lastItem != it)) {
-//                searchViewModel.page++
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    searchViewModel.search(true)
-//                }
-//                searchViewModel.lastItem = it
-//                Toast.makeText(this, R.string.loading_series, Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        seriesAdapter.onBottomReachedListener = object : RecyclerListener.OnBottomReachedListener {
+            override fun onBottomReached(position: Int) {
+                Log.d(TAG, "reached bottom")
+                if(searchViewModel.seriesList.value!!.isHasNext && (searchViewModel.lastItem != position)) {
+                    searchViewModel.page++
+                    CoroutineScope(Dispatchers.Main).launch {
+                        searchViewModel.search(true)
+                    }
+                    searchViewModel.lastItem = position
+                    Toast.makeText(this@SearchActivity, R.string.loading_series, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         val gridView: RecyclerView = findViewById(R.id.gridview_search)
         gridView.layoutManager = GridLayoutManager(this, resources.getInteger(R.integer.gridview_series_columns))

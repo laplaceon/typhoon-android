@@ -1,5 +1,6 @@
 package com.airstream.typhoon.ui.library
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,10 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
+import com.airstream.typhoon.adapter.SeriesAdapter
 import com.airstream.typhoon.data.library.entities.Category
+import com.airstream.typhoon.ui.series.SeriesActivity
+import com.airstream.typhoon.utils.ItemClickSupport
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.uvnode.typhoon.extensions.model.Series
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +29,7 @@ import kotlinx.coroutines.withContext
 class LibraryFragment : Fragment() {
 
     private val libraryViewModel: LibraryViewModel by viewModels()
+    private var seriesAdapter: SeriesAdapter = SeriesAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +45,21 @@ class LibraryFragment : Fragment() {
         navSpinner.visibility = View.GONE
 
         setHasOptionsMenu(true)
+
+        val gridView: RecyclerView = root.findViewById(R.id.gridview_library)
+        gridView.layoutManager = GridLayoutManager(requireActivity(), resources.getInteger(R.integer.gridview_series_columns))
+        gridView.setHasFixedSize(true)
+        gridView.adapter = seriesAdapter
+
+        ItemClickSupport.addTo(gridView).setOnItemClickListener { _, position, _ ->
+            val series = seriesAdapter.getItem(position)
+
+            val intent = Intent(requireActivity(), SeriesActivity::class.java).apply {
+                putExtra("series", series)
+                putExtra("source", series.source)
+            }
+            requireActivity().startActivity(intent)
+        }
 
         val chipGroup: ChipGroup = root.findViewById(R.id.library_category_chips)
 
@@ -69,7 +92,23 @@ class LibraryFragment : Fragment() {
                 CoroutineScope(Dispatchers.Default).launch {
                     val series = libraryViewModel.seriesDao.getAll(category.id)
                     withContext(Dispatchers.Main) {
-                        Log.d(TAG, "onCreateView: $series")
+                        val mappedSeries = series.map {
+                            val s = Series()
+                            s.source = it.sourceId
+                            s.id = it.seriesId
+                            s.image = it.image
+                            s.title = it.title
+                            s.uri = it.uri
+
+                            s
+                        }
+
+                        Log.d(TAG, "onCreateView: $mappedSeries")
+
+                        seriesAdapter.clear()
+                        seriesAdapter.addAll(mappedSeries)
+
+                        gridView.adapter = seriesAdapter
                     }
                 }
             }
@@ -88,9 +127,13 @@ class LibraryFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_managelibrary -> {
-                CoroutineScope(Dispatchers.Default).launch {
-                    libraryViewModel.categoryDao.insertAll(Category("September"))
-                }
+                val libraryManagerFragment = LibraryManagerFragment()
+
+                val bundle = Bundle()
+                bundle.putInt("mode", 0)
+
+                libraryManagerFragment.arguments = bundle
+                libraryManagerFragment.show(childFragmentManager, "Manage Library")
             }
         }
         return super.onOptionsItemSelected(item)

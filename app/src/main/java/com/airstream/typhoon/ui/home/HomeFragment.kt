@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
         gridView.setHasFixedSize(true)
         gridView.adapter = seriesAdapter
 
-        ItemClickSupport.addTo(gridView).setOnItemClickListener { recyclerView, position, v ->
+        ItemClickSupport.addTo(gridView).setOnItemClickListener { _, position, _ ->
             val series = seriesAdapter.getItem(position)
 
             val intent = Intent(requireActivity(), SeriesActivity::class.java).apply {

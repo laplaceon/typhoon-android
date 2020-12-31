@@ -1,8 +1,11 @@
-package com.airstream.typhoon.adapter;
+package com.airstream.typhoon.adapter
 
-public class RecyclerListener {
+class RecyclerListener {
+    interface OnBottomReachedListener {
+        fun onBottomReached(position: Int)
+    }
 
-    public interface OnBottomReachedListener {
-        void onBottomReached(int position);
+    interface OnCheckChangedListener {
+        fun onCheckChanged(categoryId: Int, isChecked: Boolean)
     }
 }

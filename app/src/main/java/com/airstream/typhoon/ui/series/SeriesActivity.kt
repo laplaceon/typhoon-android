@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.airstream.typhoon.R
+import com.airstream.typhoon.ui.library.LibraryManagerFragment
 import com.airstream.typhoon.ui.series.episodes.EpisodesControlsFragment
 import com.airstream.typhoon.ui.series.episodes.EpisodesFragment
 import com.google.android.material.tabs.TabLayout
@@ -36,7 +37,9 @@ class SeriesActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             seriesViewModel.sourceId = intent.extras?.getString("source")
-            seriesViewModel.series.value = intent.extras?.getParcelable<Series>("series")
+            val series = intent.extras?.getParcelable<Series>("series")
+            series!!.source = seriesViewModel.sourceId
+            seriesViewModel.series.value = series
         }
 
         val viewPager: ViewPager2 = findViewById(R.id.pager)
@@ -89,6 +92,16 @@ class SeriesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
+            R.id.action_library_add -> {
+                val libraryManagerFragment = LibraryManagerFragment()
+
+                val bundle = Bundle()
+                bundle.putInt("mode", 1)
+                bundle.putParcelable("series", seriesViewModel.series.value!!)
+
+                libraryManagerFragment.arguments = bundle
+                libraryManagerFragment.show(supportFragmentManager, "Add to Library")
+            }
             else -> {
                 return true
             }

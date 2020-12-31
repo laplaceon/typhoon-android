@@ -29,7 +29,7 @@ class ExtensionAdapter : RecyclerView.Adapter<ExtensionAdapter.ViewHolder>() {
         notifyItemRangeInserted(size, extensions.size)
     }
 
-    fun getItem(position: Int) = extensions[position]
+    private fun getItem(position: Int) = extensions[position]
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val icon: ImageView = itemView.findViewById(R.id.icon)

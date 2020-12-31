@@ -30,6 +30,12 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_yes">Yes</string>
 
+    <string name="library_backup">Library backed up</string>
+    <string name="library_list_series_added">Added series to list</string>
+    <string name="library_list_renamed">List was renamed</string>
+    <string name="library_manager">Library Manager</string>
+    <string name="library_restore">Library restored</string>
+    <string name="library_restore_file_error">File could not be restored from</string>
 
     <string name="action_search">Search</string>
     <string name="action_managelibrary">Manage Library</string>
