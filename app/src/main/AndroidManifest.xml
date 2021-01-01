@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
@@ -37,6 +38,7 @@
         <activity android:name=".ui.player.WebPlayerActivity" android:theme="@style/AppTheme.Player" android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity android:name=".extension.ExtensionInstallActivity" />
+        <activity android:name=".ui.extensions.ExtensionInfoActivity" />
 
         <activity android:name="com.adcolony.sdk.AdColonyInterstitialActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

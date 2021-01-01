@@ -24,5 +24,10 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
         _selectedCategory.value = pos
     }
 
+    fun removeSeriesFromCategory(categoryId: Int, sourceId: String, seriesId: String) {
+        seriesDao.delete(categoryId, sourceId, seriesId)
+
+        _selectedCategory.postValue(_selectedCategory.value)
+    }
 
 }

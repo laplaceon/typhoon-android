@@ -22,7 +22,6 @@ import com.airstream.typhoon.adapter.ExtensionAdapter
 class ExtensionsFragment : Fragment() {
 
     private val extensionsViewModel: ExtensionsViewModel by viewModels()
-    private var extensionsAdapter = ExtensionAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +34,9 @@ class ExtensionsFragment : Fragment() {
         val navSpinner: Spinner = requireActivity().findViewById(R.id.nav_spinner)
 
         toolbar?.setDisplayShowTitleEnabled(true)
-        navSpinner?.visibility = View.GONE
+        navSpinner.visibility = View.GONE
+
+        val extensionsAdapter = ExtensionAdapter(requireActivity())
 
         val extensionsList: RecyclerView = root.findViewById(R.id.listview_extension)
         extensionsList.layoutManager = LinearLayoutManager(requireActivity())

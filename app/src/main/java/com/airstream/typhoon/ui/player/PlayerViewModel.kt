@@ -52,19 +52,15 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     suspend fun getVideoUris(): WatchableResponse? {
-        val currentSource = sourceRepository.currentSource.value?.let {
-            sourceRepository.getSourceById(it)
-        }
+        val source = sourceRepository.getSourceById(series.source)
 
-        return seriesRepository.getVideoUris(currentSource, series, episode)
+        return seriesRepository.getVideoUris(source, series, episode)
     }
 
     suspend fun getVideoUrisFromMirror(mirror: Mirror): VideoResponse? {
-        val currentSource = sourceRepository.currentSource.value?.let {
-            sourceRepository.getSourceById(it)
-        }
+        val source = sourceRepository.getSourceById(series.source)
 
-        return seriesRepository.getVideoUris(currentSource, series, episode, mirror)
+        return seriesRepository.getVideoUris(source, series, episode, mirror)
     }
 
     companion object {

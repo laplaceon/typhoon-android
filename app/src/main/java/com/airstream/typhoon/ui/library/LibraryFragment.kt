@@ -1,11 +1,13 @@
 package com.airstream.typhoon.ui.library
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
 import com.airstream.typhoon.adapter.SeriesAdapter
-import com.airstream.typhoon.data.library.entities.Category
 import com.airstream.typhoon.ui.series.SeriesActivity
 import com.airstream.typhoon.utils.ItemClickSupport
 import com.google.android.material.chip.Chip
@@ -47,7 +48,10 @@ class LibraryFragment : Fragment() {
         setHasOptionsMenu(true)
 
         val gridView: RecyclerView = root.findViewById(R.id.gridview_library)
-        gridView.layoutManager = GridLayoutManager(requireActivity(), resources.getInteger(R.integer.gridview_series_columns))
+        gridView.layoutManager = GridLayoutManager(
+            requireActivity(),
+            resources.getInteger(R.integer.gridview_series_columns)
+        )
         gridView.setHasFixedSize(true)
         gridView.adapter = seriesAdapter
 
@@ -59,6 +63,31 @@ class LibraryFragment : Fragment() {
                 putExtra("source", series.source)
             }
             requireActivity().startActivity(intent)
+        }
+
+        ItemClickSupport.addTo(gridView).setOnItemLongClickListener { _, position, _ ->
+            val series = seriesAdapter.getItem(position)
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+            builder.setMessage(R.string.dialog_library_list_remove_series_confirm)
+            builder.setPositiveButton(R.string.dialog_yes,
+                DialogInterface.OnClickListener { _, _ ->
+                    val category = libraryViewModel.selectedCategory.value?.let {
+                        libraryViewModel.categories.value?.get(
+                            it
+                        )
+                    }
+
+                    CoroutineScope(Dispatchers.Default).launch {
+                        libraryViewModel.removeSeriesFromCategory(category!!.id, series.source, series.id)
+                    }
+
+                })
+            builder.setNegativeButton(R.string.dialog_cancel,
+                DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+            builder.show()
+
+            true
         }
 
         val chipGroup: ChipGroup = root.findViewById(R.id.library_category_chips)
@@ -77,7 +106,8 @@ class LibraryFragment : Fragment() {
             }
 
             if (chipGroup.childCount > 0) {
-                (chipGroup.getChildAt(libraryViewModel.selectedCategory.value!!) as Chip).isChecked = true
+                (chipGroup.getChildAt(libraryViewModel.selectedCategory.value!!) as Chip).isChecked =
+                    true
             }
         })
 

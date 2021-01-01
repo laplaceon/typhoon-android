@@ -64,6 +64,7 @@ dependencies {
 
     // Ads & Analytics
     implementation 'com.adcolony:sdk:4.3.1'
+    implementation 'com.vungle:publisher-sdk-android:6.8.1'
     implementation 'com.flurry.android:analytics:12.1.0'
     implementation "com.google.android.gms:play-services-ads-identifier:17.0.0"
 

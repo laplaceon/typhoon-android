@@ -192,6 +192,10 @@ class ExtensionManager private constructor(private val ctx: Context) {
         downloads.remove(packageName)
     }
 
+    fun getExtensionWithPackage(extensionId: String?): ExtensionHolder? {
+        return packageMap[extensionId]?.let { installedExtensions.value?.get(it) }
+    }
+
     inner class InstallListener : ExtensionInstallReceiver.Listener {
         override fun onExtensionInstalled() {
             loadExtensions()

@@ -43,7 +43,6 @@ class EpisodesFragment : Fragment() {
             val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
                 putExtra("episode", episode)
                 putExtra("series", seriesViewModel.series.value)
-                putExtra("source", seriesViewModel.sourceId)
             }
             requireActivity().startActivity(intent)
         }

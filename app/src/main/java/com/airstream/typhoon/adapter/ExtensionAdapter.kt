@@ -1,6 +1,7 @@
 package com.airstream.typhoon.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.airstream.typhoon.R
 import com.airstream.typhoon.extension.ExtensionHolder
+import com.airstream.typhoon.ui.extensions.ExtensionInfoActivity
+import com.airstream.typhoon.utils.Injector
 import com.squareup.picasso.Picasso
-import com.uvnode.typhoon.extensions.model.Series
 
-class ExtensionAdapter : RecyclerView.Adapter<ExtensionAdapter.ViewHolder>() {
+
+class ExtensionAdapter(private val ctx: Context) : RecyclerView.Adapter<ExtensionAdapter.ViewHolder>() {
 
     private val extensions: MutableList<ExtensionHolder> = mutableListOf()
 
@@ -72,11 +75,13 @@ class ExtensionAdapter : RecyclerView.Adapter<ExtensionAdapter.ViewHolder>() {
         }
 
         holder.installButton.setOnClickListener {
-
+            Injector.getExtensionManager(ctx).downloadAndInstall(extension.url!!, extension.extension!!.packageName);
         }
 
         holder.manageButton.setOnClickListener {
-            
+            val intent = Intent(ctx, ExtensionInfoActivity::class.java)
+            intent.putExtra("extension", extension.extension!!.packageName)
+            ctx.startActivity(intent)
         }
     }
 }
