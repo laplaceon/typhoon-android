@@ -162,33 +162,21 @@ class PlayerActivity : AppCompatActivity() {
             playerViewModel.backupUri = videoResponse.backupUri
 
             withContext(Dispatchers.Main) {
-                progressBar.visibility = ProgressBar.GONE;
-                showSourceControls();
-                initializePlayer();
+                progressBar.visibility = ProgressBar.GONE
+                showSourceControls()
+                initializePlayer()
             }
         } else {
             when (videoResponse.errorCode) {
                 VideoResponse.ERROR_LINKS_NOT_FOUND -> {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@PlayerActivity, R.string.player_error_links_notfound, Toast.LENGTH_SHORT).show();
-                        switchToWebPlayer();
-                        if(playerViewModel.mirrors.isNotEmpty()) {
-                            showMirrorSelectionDialog();
-                        } else {
-                            finish();
-                        }
-
+                        Toast.makeText(this@PlayerActivity, R.string.player_error_links_notfound, Toast.LENGTH_SHORT).show()
+                        switchToWebPlayer()
                     }
                 }
                 VideoResponse.ERROR_SOURCE_NOT_FOUND -> {
-                    Toast.makeText(this@PlayerActivity, R.string.player_error_source_not_found, Toast.LENGTH_SHORT).show();
-                    switchToWebPlayer();
-                    if(playerViewModel.mirrors.isNotEmpty()) {
-                        showMirrorSelectionDialog();
-                    } else {
-                        finish();
-                    }
-
+                    Toast.makeText(this@PlayerActivity, R.string.player_error_source_not_found, Toast.LENGTH_SHORT).show()
+                    switchToWebPlayer()
                 }
                 VideoResponse.ERROR_TIMEOUT -> Toast.makeText(this@PlayerActivity, R.string.player_error_request_timeout, Toast.LENGTH_SHORT).show()
                 else -> withContext(Dispatchers.Main) {
@@ -198,6 +186,12 @@ class PlayerActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+
+            if(playerViewModel.mirrors.isNotEmpty()) {
+                showMirrorSelectionDialog()
+            } else {
+                finish()
             }
         }
     }
@@ -256,13 +250,13 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun switchToWebPlayer() {
         var webPlayerLink = ""
-        if ("" != playerViewModel.backupUri) {
+        if (playerViewModel.backupUri.isNotEmpty()) {
             webPlayerLink = playerViewModel.backupUri
-        } else if ("" != playerViewModel.episode.uri) {
+        } else if (playerViewModel.episode.uri.isNotEmpty()) {
             webPlayerLink = playerViewModel.episode.uri
         }
 
-        if ("" != webPlayerLink) {
+        if (webPlayerLink.isNotEmpty()) {
             Toast.makeText(this, R.string.player_web_switching, Toast.LENGTH_SHORT).show()
             val intent = Intent(this, WebPlayerActivity::class.java)
             intent.putExtra("link", webPlayerLink)
@@ -382,16 +376,16 @@ class PlayerActivity : AppCompatActivity() {
                 if (playbackState == Player.STATE_BUFFERING) {
                     //Toast.makeText(getActivity(), "Buffering", Toast.LENGTH_SHORT).show();
                     progressBar.visibility = ProgressBar.VISIBLE
-                    if (playerViewModel.stopwatch.isRunning()) {
+                    if (playerViewModel.stopwatch.isRunning) {
                         playerViewModel.stopwatch.stop()
                     }
                 }
                 if (playbackState == Player.STATE_READY) {
-                    if (!playerViewModel.stopwatch.isRunning()) {
+                    if (!playerViewModel.stopwatch.isRunning) {
                         playerViewModel.stopwatch.start()
                     }
                     if (playerViewModel.playerHidden) {
-                        playerViewModel.player.setPlayWhenReady(false)
+                        playerViewModel.player.playWhenReady = false
                     }
 //                    if (!resumedFromHistory) {
 //                        val episodes: HashMap<String, Int> =
@@ -411,27 +405,26 @@ class PlayerActivity : AppCompatActivity() {
                         playerViewModel.resume()
                         playerViewModel.resumeFromMirror = 0
                     }
-                    if (null != this@PlayerActivity) {
-                        if (playWhenReady) {
-                            this@PlayerActivity.window
-                                .addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                            //Toast.makeText(getActivity(), "Ready", Toast.LENGTH_SHORT).show();
-                        } else {
-                            this@PlayerActivity.window
-                                .clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                            //Toast.makeText(getActivity(), "Paused", Toast.LENGTH_SHORT).show();
+
+                    if (playWhenReady) {
+                        this@PlayerActivity.window
+                            .addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        //Toast.makeText(getActivity(), "Ready", Toast.LENGTH_SHORT).show();
+                    } else {
+                        this@PlayerActivity.window
+                            .clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        //Toast.makeText(getActivity(), "Paused", Toast.LENGTH_SHORT).show();
 //                            logHistory()
-                        }
                     }
                     progressBar.visibility = ProgressBar.GONE
-//                    playerViewModel.adsManager.tryPlayAd(this@PlayerActivity)
+                    playerViewModel.adsManager.tryPlayAd(this@PlayerActivity)
                 }
             }
 
             override fun onPlayerError(error: ExoPlaybackException) {
                 if (error.type == ExoPlaybackException.TYPE_SOURCE) {
                     //Toast.makeText(getActivity(), "Source error: " + error.getSourceException().getMessage(), Toast.LENGTH_SHORT).show();
-                    if (playerViewModel.mirrors.size > 0) {
+                    if (playerViewModel.mirrors.isNotEmpty()) {
                         Toast.makeText(
                             this@PlayerActivity,
                             R.string.player_error_mirror_broken,
