@@ -43,11 +43,10 @@ class ExtensionsFragment : Fragment() {
         extensionsList.setHasFixedSize(true)
         extensionsList.adapter = extensionsAdapter
 
-        extensionsViewModel.installedExtensions.observe(viewLifecycleOwner, Observer {
-            val installableExtensions = extensionsViewModel.installableExtensions
+        extensionsViewModel.extensions.observe(viewLifecycleOwner, Observer {
             Log.d(TAG, "onCreateView: $it")
             extensionsAdapter.clear()
-            extensionsAdapter.addAll(it + installableExtensions)
+            extensionsAdapter.addAll(it)
         })
 
         return root

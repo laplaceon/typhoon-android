@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.preference
+package com.airstream.typhoon.ui.extensions
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

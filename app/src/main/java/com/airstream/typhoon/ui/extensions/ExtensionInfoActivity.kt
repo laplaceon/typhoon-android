@@ -7,13 +7,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.*
 import com.airstream.typhoon.R
-import com.airstream.typhoon.extension.ExtensionManager
 import com.airstream.typhoon.utils.Injector
-import com.uvnode.typhoon.extensions.source.Configurable
-import com.uvnode.typhoon.extensions.source.MetaSource
-import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 
 
 class ExtensionInfoActivity : AppCompatActivity() {

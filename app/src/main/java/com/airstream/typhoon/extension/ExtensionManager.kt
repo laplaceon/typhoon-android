@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.airstream.typhoon.utils.Injector
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.uvnode.typhoon.extensions.Extension
@@ -26,8 +27,11 @@ class ExtensionManager private constructor(private val ctx: Context) {
         MutableLiveData<List<ExtensionHolder>>()
     }
 
+    private val availableExtensions: MutableLiveData<List<ExtensionHolder>> by lazy {
+        MutableLiveData<List<ExtensionHolder>>()
+    }
+
     private val installedExtensions: LiveData<List<ExtensionHolder>> = _installedExtensions
-    private val availableExtensions: MutableList<ExtensionHolder> = mutableListOf()
     private val packageMap: MutableMap<String, Int> = mutableMapOf()
     private val downloads: MutableMap<String, File> = mutableMapOf()
     private val extensionInstallReceiver = ExtensionInstallReceiver(InstallListener())
@@ -85,9 +89,9 @@ class ExtensionManager private constructor(private val ctx: Context) {
     private fun getAvailableExtensionsFromRepo() {
         val request = Request.Builder().url(MAIN_REPO + "repo.json").get().build()
 
-        networkHelper.okClient.newCall(request).enqueue(object: Callback {
+        networkHelper.okClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
+                Log.d(TAG, "onFailure: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -95,8 +99,11 @@ class ExtensionManager private constructor(private val ctx: Context) {
                     val objectMapper = ObjectMapper()
 
                     val root = objectMapper.readTree(response.body?.bytes())
+
                     val repoId = root.get("id").asText()
                     val extensions = root.get("extensions")
+
+                    val retrievedExtensions = mutableListOf<ExtensionHolder>()
 
                     for (extensionNode in extensions) {
                         val extension = Extension()
@@ -116,16 +123,21 @@ class ExtensionManager private constructor(private val ctx: Context) {
                         extensionHolder.url = url
                         extensionHolder.iconUrl = extensionNode.get("icon").asText()
 
-                        if(packageMap.contains(packageName)) {
-                            val installedExtensionHolder = installedExtensions.value!![packageMap[packageName]!!]
+                        Log.d(TAG, "onResponse: $extensionHolder")
+
+                        if (packageMap.contains(packageName)) {
+                            val installedExtensionHolder =
+                                installedExtensions.value!![packageMap[packageName]!!]
                             if (versionCode > installedExtensionHolder.extension!!.versionCode) {
                                 installedExtensionHolder.hasUpdate = true
                                 installedExtensionHolder.url = url
                             }
                         }
 
-                        availableExtensions.add(extensionHolder)
+                        retrievedExtensions.add(extensionHolder)
                     }
+
+                    availableExtensions.postValue(retrievedExtensions)
                 }
             }
 
@@ -134,10 +146,11 @@ class ExtensionManager private constructor(private val ctx: Context) {
 
     fun getInstalledExtensions() = installedExtensions
 
-    fun getInstallableExtensions() =
-        availableExtensions.filter {
-            it.isInstalled or it.hasUpdate
+    fun getInstallableExtensions() = Transformations.map(availableExtensions) {
+        it.filter { item ->
+            (item.isInstalled && item.hasUpdate) or !item.isInstalled
         }
+    }
 
     fun downloadAndInstall(apkUrl: String, packageName: String) {
         if (apkUrl.isNotBlank()) {
@@ -169,10 +182,11 @@ class ExtensionManager private constructor(private val ctx: Context) {
     fun install(apkFile: File, packageName: String) {
         downloads[packageName] = apkFile.absoluteFile
 
-        val apkUri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.provider", apkFile)
+        val apkUri = FileProvider.getUriForFile(ctx, "${ctx.applicationContext.packageName}.provider", apkFile)
         val intent = Intent(ctx, ExtensionInstallActivity::class.java).apply {
             setDataAndType(apkUri, APK_MINE)
             putExtra("downloadId", packageName)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         ctx.startActivity(intent)
     }
