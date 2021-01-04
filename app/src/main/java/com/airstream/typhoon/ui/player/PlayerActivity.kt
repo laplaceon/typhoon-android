@@ -2,6 +2,7 @@ package com.airstream.typhoon.ui.player
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.airstream.typhoon.R
-import com.airstream.typhoon.utils.Injector
+import com.airstream.typhoon.analytics.AdsManager
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -80,21 +81,25 @@ class PlayerActivity : AppCompatActivity() {
 
         resolutionSwitcher.setOnClickListener {
             if(playerViewModel.uris.size > 1) {
-                showResolutionSelectionDialog();
+                showResolutionSelectionDialog()
             } else {
-                Toast.makeText(this, R.string.player_video_options_none, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.player_video_options_none, Toast.LENGTH_SHORT).show()
             }
         }
 
         mirrorSelector.setOnClickListener {
             if(playerViewModel.mirrors.isNotEmpty()) {
-                showMirrorSelectionDialog();
+                showMirrorSelectionDialog()
+            } else {
+                Toast.makeText(this, R.string.player_mirror_options_none, Toast.LENGTH_SHORT).show()
             }
         }
 
         viewerSwitcher.setOnClickListener {
-            switchToWebPlayer();
+            switchToWebPlayer()
         }
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         // Set series and episode
         val extras = intent.extras!!
@@ -111,13 +116,16 @@ class PlayerActivity : AppCompatActivity() {
         playerViewModel.quality = shared.getInt("quality", -1)
 
         if (playerViewModel.quality == -1) {
-            val numCores: Int = getNumCores()
-            if (numCores == 1) {
-                playerViewModel.quality = 1
-            } else if (numCores in 2..3) {
-                playerViewModel.quality = 2
-            } else {
-                playerViewModel.quality = 3
+            when (getNumCores()) {
+                1 -> {
+                    playerViewModel.quality = 1
+                }
+                in 2..3 -> {
+                    playerViewModel.quality = 2
+                }
+                else -> {
+                    playerViewModel.quality = 3
+                }
             }
         }
 
@@ -161,10 +169,18 @@ class PlayerActivity : AppCompatActivity() {
             playerViewModel.uris = videoResponse.uris
             playerViewModel.backupUri = videoResponse.backupUri
 
-            withContext(Dispatchers.Main) {
-                progressBar.visibility = ProgressBar.GONE
-                showSourceControls()
-                initializePlayer()
+            if(playerViewModel.uris.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = ProgressBar.GONE
+                    showSourceControls()
+                    initializePlayer()
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@PlayerActivity, R.string.player_error_links_notfound, Toast.LENGTH_SHORT).show()
+                }
+
+                fallback()
             }
         } else {
             when (videoResponse.errorCode) {
@@ -188,9 +204,19 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
 
-            if(playerViewModel.mirrors.isNotEmpty()) {
+            fallback()
+        }
+    }
+
+    private fun fallback() {
+        when {
+            playerViewModel.mirrors.isNotEmpty() -> {
                 showMirrorSelectionDialog()
-            } else {
+            }
+            playerViewModel.backupUri.isNotEmpty() -> {
+                switchToWebPlayer()
+            }
+            else -> {
                 finish()
             }
         }
@@ -417,7 +443,12 @@ class PlayerActivity : AppCompatActivity() {
 //                            logHistory()
                     }
                     progressBar.visibility = ProgressBar.GONE
-                    playerViewModel.adsManager.tryPlayAd(this@PlayerActivity)
+                    playerViewModel.adsManager.tryPlayAd(this@PlayerActivity, object : AdsManager.OnFinishedCallback {
+                        override fun onFinish() {
+                            playerView.player!!.play()
+                        }
+
+                    })
                 }
             }
 

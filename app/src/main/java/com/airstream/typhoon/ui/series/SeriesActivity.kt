@@ -19,6 +19,7 @@ import com.airstream.typhoon.R
 import com.airstream.typhoon.ui.library.LibraryManagerFragment
 import com.airstream.typhoon.ui.series.episodes.EpisodesControlsFragment
 import com.airstream.typhoon.ui.series.episodes.EpisodesFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.uvnode.typhoon.extensions.model.Series

@@ -38,10 +38,15 @@ class AdsManager {
 
     }
 
-    fun tryPlayAd(ctx: Activity) {
+    fun tryPlayAd(ctx: Activity, onFinishedCallback: OnFinishedCallback) {
         if (!adPlayed && adColonyAd != null) {
             adColonyAd!!.show()
+            onFinishedCallback.onFinish()
         }
+    }
+
+    interface OnFinishedCallback {
+        fun onFinish()
     }
 
     companion object {

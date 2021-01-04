@@ -132,6 +132,10 @@ class ExtensionManager private constructor(private val ctx: Context) {
                                 installedExtensionHolder.hasUpdate = true
                                 installedExtensionHolder.url = url
                             }
+                            val l = _installedExtensions.value!! as MutableList
+                            l[packageMap[packageName]!!] = installedExtensionHolder
+                            _installedExtensions.postValue(l)
+                            Log.d(TAG, "onResponse: ${installedExtensions.value!![packageMap[packageName]!!]}")
                         }
 
                         retrievedExtensions.add(extensionHolder)
@@ -148,7 +152,7 @@ class ExtensionManager private constructor(private val ctx: Context) {
 
     fun getInstallableExtensions() = Transformations.map(availableExtensions) {
         it.filter { item ->
-            (item.isInstalled && item.hasUpdate) or !item.isInstalled
+            packageMap[item.extension!!.packageName] == null
         }
     }
 

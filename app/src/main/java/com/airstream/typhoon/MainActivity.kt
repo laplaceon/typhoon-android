@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -17,8 +19,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.airstream.typhoon.analytics.AdsManager
+import com.airstream.typhoon.ui.onboarding.OnboardingFragment
 import com.airstream.typhoon.ui.search.SearchActivity
 import com.airstream.typhoon.ui.settings.SettingsActivity
+import com.airstream.typhoon.utils.Injector
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 
@@ -56,6 +60,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 AdsManager.configure(this@MainActivity)
             }.start()
+        }
+
+        if (Injector.getExtensionManager(this).getInstalledExtensions().value!!.isEmpty()) {
+            drawerLayout.open()
+
+            val onboardingFragment = OnboardingFragment()
+            onboardingFragment.isCancelable = false
+
+            onboardingFragment.show(supportFragmentManager, "Onboarding Fragment")
         }
     }
 
@@ -99,4 +112,9 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+    
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
 }

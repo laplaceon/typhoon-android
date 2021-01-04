@@ -1,5 +1,6 @@
 package com.airstream.typhoon.ui.library
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
@@ -7,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +17,8 @@ import com.airstream.typhoon.R
 import com.airstream.typhoon.adapter.LibraryCategoryAdapter
 import com.airstream.typhoon.adapter.RecyclerListener
 import com.airstream.typhoon.data.library.entities.Category
-import com.flurry.sdk.i
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.uvnode.typhoon.extensions.model.Series
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +30,26 @@ import kotlinx.coroutines.withContext
 class LibraryManagerFragment : BottomSheetDialogFragment() {
 
     private val libraryManagerViewModel: LibraryManagerViewModel by viewModels()
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        dialog.setOnShowListener { dialog ->
+            val d = dialog as BottomSheetDialog
+            val bottomSheet =
+                d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
+            BottomSheetBehavior.from(bottomSheet!!).state =
+                BottomSheetBehavior.STATE_EXPANDED
+
+            BottomSheetBehavior.from(bottomSheet!!).peekHeight = 0
+        }
+
+        // Do something with your dialog like setContentView() or whatever
+
+        // Do something with your dialog like setContentView() or whatever
+        return dialog
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,7 +138,11 @@ class LibraryManagerFragment : BottomSheetDialogFragment() {
                         libraryManagerViewModel.renameCategory(category.id, name)
 
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(activity, R.string.library_list_renamed, Toast.LENGTH_SHORT)
+                            Toast.makeText(
+                                activity,
+                                R.string.library_list_renamed,
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }

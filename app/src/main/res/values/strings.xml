@@ -58,6 +58,7 @@
     <string name="player_error_request_timeout">Request timed out</string>
     <string name="player_video_loading">Loading video&#8230;</string>
     <string name="player_video_options_none">There are no more video options</string>
+    <string name="player_mirror_options_none">There are no mirrors</string>
     <string name="player_web_switching">Switching to web player</string>
 
 
